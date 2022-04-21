@@ -1,1 +1,3 @@
 # hubspot-go-sdk
+
+THIS IS STILL IN PROGRESS, STAY TUNED.....
