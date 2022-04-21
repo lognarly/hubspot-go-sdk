@@ -24,7 +24,10 @@ type Client struct {
 	apiKey  string
 	http    *http.Client
 
-	Contacts Contacts
+	Contacts  Contacts
+	Deals     Deals
+	Products  Products
+	LineItems LineItems
 }
 
 func NewClient(apiKey string) (*Client, error) {
@@ -41,18 +44,19 @@ func NewClient(apiKey string) (*Client, error) {
 		Timeout: time.Duration(30 * time.Second),
 	}
 
-	client.Contacts = &contacts{client: client}
+	client.Contacts  = &contacts{client: client}
+	client.Deals     = &deals{client: client}
+	client.Products  = &products{client: client}
+	client.LineItems = &lineItems{client: client}
 	
 	return client, nil
 }
 
 func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (*http.Request, error) {
-
 	var err error
 	var body []byte
 	var newBody io.Reader
 	u, err := c.formatUrlWithApiKey(endpoint)
-	
 	if err != nil {
 		return nil, fmt.Errorf("client.newHttpRequest(): c.formatUrlWithApiKey(): %v", err)
 	}
