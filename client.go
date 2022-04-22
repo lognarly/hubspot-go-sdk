@@ -24,10 +24,11 @@ type Client struct {
 	apiKey  string
 	http    *http.Client
 
-	Contacts  Contacts
-	Deals     Deals
-	Products  Products
-	LineItems LineItems
+	Associations Associations
+	Contacts     Contacts
+	Deals        Deals
+	Products     Products
+	LineItems    LineItems
 }
 
 func NewClient(apiKey string) (*Client, error) {
@@ -44,10 +45,11 @@ func NewClient(apiKey string) (*Client, error) {
 		Timeout: time.Duration(30 * time.Second),
 	}
 
-	client.Contacts  = &contacts{client: client}
-	client.Deals     = &deals{client: client}
-	client.Products  = &products{client: client}
-	client.LineItems = &lineItems{client: client}
+	client.Associations = &associations{client: client}
+	client.Contacts     = &contacts{client: client}
+	client.Deals        = &deals{client: client}
+	client.Products     = &products{client: client}
+	client.LineItems    = &lineItems{client: client}
 	
 	return client, nil
 }
@@ -65,7 +67,7 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 	reqHeaders.Set("Content-Type", "application/json")
 	
 	switch method {
-	case "GET", "PUT", "DELETE":
+	case "GET", "DELETE":
 		if v != nil {
 			q, err := query.Values(v)
 			if err != nil {
@@ -73,7 +75,7 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 			}
 			u.RawQuery = u.RawQuery + encodeQueryParams(q)
 		}
-	case "POST", "PATCH":
+	case "POST", "PUT", "PATCH":
 		if v != nil {
 			if body, err = json.Marshal(v); err != nil {
 				return nil, fmt.Errorf("client.newHttpRequest(): json.Marshal(): %v", err)
