@@ -7,11 +7,11 @@ import (
 type LineItems interface {
 	List(options *LineItemListOptions) (*LineItemList, error)
 	Create(options *LineItemCreateOptions) (*LineItem, error)
-	/*Read(lineItemId string) (*LineItem, error)
+	Read(lineItemId string) (*LineItem, error)
 	Update(lineItemId string, options *LineItemUpdateOptions) (*LineItem, error)
 	Archive(lineItemId string) (error)
 	BatchArchive(options *LineItemBatchArchiveOptions) (error)
-	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateOutput, error)*/
+	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateOutput, error)
 }
 
 type lineItems struct {

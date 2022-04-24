@@ -25,6 +25,7 @@ type Client struct {
 	http    *http.Client
 
 	Associations Associations
+	Companies    Companies
 	Contacts     Contacts
 	Deals        Deals
 	Products     Products
@@ -46,6 +47,7 @@ func NewClient(apiKey string) (*Client, error) {
 	}
 
 	client.Associations = &associations{client: client}
+	client.Companies    = &companies{client: client}
 	client.Contacts     = &contacts{client: client}
 	client.Deals        = &deals{client: client}
 	client.Products     = &products{client: client}
