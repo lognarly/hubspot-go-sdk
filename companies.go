@@ -9,6 +9,10 @@ type Companies interface {
 	Create(options *CompanyCreateOptions) (*Company, error)
 	Read(query *CompanyReadQuery, companyId string) (*Company, error)
 	Update(options *CompanyCreateOrUpdateOptions, companyId string) (*Company, error)
+	Delete(companyId string) (error)
+	BatchArchive(options *ComapnyBatchArchiveOptions) (error)
+	BatchCreate(options *CompanyBatchCreateOptions) (*CompanyBatchCreateOrUpdateResults, error)
+	BatchUpdate(options *CompanyBatchUpdateOptions) (*CompanyBatchCreateOrUpdateResults, error)
 }
 
 type companies struct {
@@ -78,7 +82,27 @@ type CompanyUpdateQuery struct {
 	IdProperty string `url:"idProperty"`
 }*/
 
+type CompanyBatchArchiveOptions struct {
+	Inputs []ArchiveCompany `json:"inputs"`
+}
 
+type ArchiveCompany struct {
+	CompanyId string `json:"id"`
+}
+
+type LineItemBatchCreateResults struct {
+	Status  string     `json:"status"`
+	Results []Comany `json:"results"`
+}
+
+type CompanyBatchUpdateOptions struct {
+	Inputs []CompanyBatchUpdateProperties `json:"inputs"`
+}
+
+type CompanyBatchUpdateProperties struct {
+	ID string `json:"id"`
+	Properties CompanyCreateOrUpdateProperties `json:"properties"`
+}
 
 func (c *companies) List(query *CompanyListQuery) (*CompanyList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies")
@@ -146,4 +170,58 @@ func (c *companies) Update(options *CompanyCreateOrUpdateOptions, companyId stri
 	}
 
 	return company, nil
+}
+
+func (c *companies) Delete(companyId string) (error) {
+	u := fmt.Sprintf("crm/v3/objects/companies/%s", companyId)
+	req, err := c.client.newHttpRequest("DELETE", u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("client.Companies.Delete(): newHttpRequest(): %v", err)
+	}
+
+	return c.client.do(req, nil)
+}
+
+func (c *companies) BatchArchive(options *ComapnyBatchArchiveOptions) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/companies/batch/archive")
+	req, err := c.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return fmt.Errorf("client.Comanies.BatchArchive(): newHttpRequest(): %v", err)
+	}
+
+	return c.client.do(req, nil)
+}
+
+func (c *companies) BatchCreate(options *CompanyBatchCreateOptions) (*CompanyBatchCreateOrUpdateResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/companies/batch/create")
+	req, err := c.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.Companies.BatchCreate(): newHttpRequest(): %v", err)
+	}
+
+	companies := &CompanyBatchCreateOrUpdateResults{}
+
+	err = c.client.do(req, companies)
+	if err != nil {
+		return nil, fmt.Errorf("client.Companies.BatchCreate(): do(): %+v", err)
+	}
+
+	return companies, nil
+}
+
+func (c *companies) BatchUpdate(options *CompanyBatchUpdateOptions) (*CompanyBatchCreateOrUpdateResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/companies/batch/update")
+	req, err := c.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.Companies.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	companies := &CompanyBatchCreateOrUpdateResults{}
+
+	err = c.client.do(req, companies)
+	if err != nil {
+		return nil, fmt.Errorf("client.Companies.BatchUpdate(): do(): %+v", err)
+	}
+
+	return companies, nil
 }

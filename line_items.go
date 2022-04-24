@@ -11,7 +11,7 @@ type LineItems interface {
 	Update(lineItemId string, options *LineItemUpdateOptions) (*LineItem, error)
 	Archive(lineItemId string) (error)
 	BatchArchive(options *LineItemBatchArchiveOptions) (error)
-	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateOutput, error)
+	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateResults, error)
 }
 
 type lineItems struct {
@@ -75,7 +75,7 @@ type LineItemBatchCreateOptions struct {
 	Inputs []LineItemCreateOptions `json:"inputs"`
 }
 
-type LineItemBatchCreateOutput struct {
+type LineItemBatchCreateResults struct {
 	Status  string    `json:"status"`
 	Results []LineItem `json:"results"`
 }
@@ -168,14 +168,14 @@ func (l *lineItems) BatchArchive(options *LineItemBatchArchiveOptions) (error) {
 	return l.client.do(req, nil)
 }
 
-func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateOutput, error) {
+func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/lineitems/batch/create")
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItem.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
-	lineItems := &LineItemBatchCreateOutput{}
+	lineItems := &LineItemBatchCreateResults{}
 
 	err = l.client.do(req, lineItems)
 	if err != nil {
