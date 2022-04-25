@@ -9,9 +9,9 @@ type Associations interface {
 	List(options *AssociationListOptions, query *AssociationListQuery) (*AssociationList, error)
 	Create(options *[]AssociationCreateOptions, query *AssociationCreateOrDeleteQuery) (*AssociationCreateOutput, error)
 	Delete(query *AssociationCreateOrDeleteQuery) (error)
-	ReadDefinition(query *AssociationDefinitionQuery) (*AssociationReadDefinition, error)
-	CreateDefinition(options *AssociationCreateDefinitionOptions, query *AssociationDefinitionQuery) (*AssociationDefinition, error)
-	UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationUpdateDefinitionQuery) (error)
+	ReadDefinition(query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
+	CreateDefinition(options *AssociationCreateDefinitionOptions, query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
+	UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationDefinitionQuery) (error)
 }
 
 type associations struct {
@@ -97,6 +97,8 @@ type AssociationUpdateDefinitionOptions struct {
 	TypeId int64 `json:"associationTypeId"`
 }
 
+
+
 type AssocationDeleteDefinitionQuery struct {
 	FromObjectType string 
 	ToObjectType   string 
@@ -181,11 +183,11 @@ func (a *associations) CreateDefinition(options *AssociationCreateDefinitionOpti
 	return ard, nil
 }
 
-func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationUpdateDefinitionQuery) (error) {
+func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationDefinitionQuery) (error) {
 	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", query.FromObjectType, query.ToObjectType)
 	req, err := a.client.newHttpRequest("PUT", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
 	}
 
 	return a.client.do(req, nil)
@@ -193,9 +195,9 @@ func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOpti
 
 func (a *associations) DeleteDefinition(query *AssocationDeleteDefinitionQuery) (error) {
 	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels/%s", query.FromObjectType, query.ToObjectType, strconv.FormatInt(query.TypeId, 10))
-	req, err := a.client.newHttpRequest("PUT", u, options)
+	req, err := a.client.newHttpRequest("PUT", u, query)
 	if err != nil {
-		return nil, fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
 	}
 
 	return a.client.do(req, nil)

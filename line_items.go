@@ -148,7 +148,7 @@ func (l *lineItems) Update(lineItemId string, options *LineItemUpdateOptions) (*
 	return lineItem, nil
 }
 
-func (l *lineItems) Delete(lineItemId string) (error) {
+func (l *lineItems) Archive(lineItemId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
 	req, err := l.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
