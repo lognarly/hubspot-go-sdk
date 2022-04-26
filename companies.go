@@ -13,8 +13,8 @@ type Companies interface {
 	BatchArchive(options *CompanyBatchArchiveOptions) (error)
 	BatchCreate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchCreateOrUpdateResults, error)
 	BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchCreateOrUpdateResults, error)
-	Search(options *CompanySearchOptions) (*CompanySearchResults, error)
-	Merge(options *CompanyMergeOptions) (*Company, error)
+	Search(options *SearchOptions) (*CompanySearchResults, error)
+	Merge(options *MergeOptions) (*Company, error)
 }
 
 type companies struct {
@@ -108,52 +108,12 @@ type CompanyBatchCreateOrUpdateProperties struct {
 	Properties CompanyCreateOrUpdateProperties `json:"properties"`
 }
 
-type CompanyFilterOperator string
-
-const (
-	EqualTo            CompanyFilterOperator = "EQ"
-	NotEqualTo         CompanyFilterOperator = "NEQ"
-	LessThan           CompanyFilterOperator = "LT"
-	LessThanEqualTo    CompanyFilterOperator = "LTE"
-	GreaterThan        CompanyFilterOperator = "GT"
-	GreaterThanEqualTo CompanyFilterOperator = "GTE"
-	Between            CompanyFilterOperator = "BETWEEN"
-	In                 CompanyFilterOperator = "IN"
-	NotIn              CompanyFilterOperator = "NOT_IN"
-	HasProperty        CompanyFilterOperator = "HAS_PROPERTY"
-	NotHasProperty     CompanyFilterOperator = "NOT_HAS_PROPERTY"
-	ContainsToken      CompanyFilterOperator = "CONTAINS_TOKEN"
-	NotContainsToken   CompanyFilterOperator = "NOT_CONTAINS_TOKEN"
-)
-
-type CompanySearchOptions struct {
-	FilterGroups []FilterGroups `json:"filterGroups"`
-	Sorts        []string       `json:"sorts"`
-	Query        string         `json:"query"`
-	Properties   []string       `json:"properties"`
-	ListOptions
-}
-
-type FilterGroups struct {
-	Filters []Filters `json:"filters"`
-}
-
-type Filters struct {
-	Value        string                `json:"value,omitempty"`
-	Values       []string              `json:"values,omitempty"`
-	PropertyName string                `json:"propertyName,omitempty"`
-	Operator     CompanyFilterOperator `json:"operator"`
-}
-
 type CompanySearchResults struct {
 	Total   int64 `json:"total"`
 	Results []Company
 }
 
-type CompanyMergeOptions struct {
-	PrimaryObjectId string `json:"primaryObjectId"`
-	ObjectIdToMerge string `json:"objectIdToMerge"`
-}
+
 
 func (c *companies) List(query *CompanyListQuery) (*CompanyList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies")
@@ -277,7 +237,7 @@ func (c *companies) BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*Co
 	return companies, nil
 }
 
-func (c *companies) Search(options *CompanySearchOptions) (*CompanySearchResults, error) {
+func (c *companies) Search(options *SearchOptions) (*CompanySearchResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/search")
 	req, err := c.client.newHttpRequest("POST", u, options)
 	if err != nil {
@@ -294,7 +254,7 @@ func (c *companies) Search(options *CompanySearchOptions) (*CompanySearchResults
 	return companies, nil
 }
 
-func (c *companies) Merge(options *CompanyMergeOptions) (*Company, error) {
+func (c *companies) Merge(options *MergeOptions) (*Company, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/merge")
 	req, err := c.client.newHttpRequest("POST", u, options)
 	if err != nil {

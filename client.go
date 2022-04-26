@@ -24,13 +24,14 @@ type Client struct {
 	apiKey  string
 	http    *http.Client
 
-	Associations Associations
-	Companies    Companies
-	Contacts     Contacts
-	Deals        Deals
+	Associations        Associations
+	Companies           Companies
+	Contacts            Contacts
+	Deals               Deals
 	FeedbackSubmissions FeedbackSubmissions
-	Products     Products
-	LineItems    LineItems
+	LineItems           LineItems
+	Products            Products
+	Tickets             Tickets
 }
 
 func NewClient(apiKey string) (*Client, error) {
@@ -52,8 +53,9 @@ func NewClient(apiKey string) (*Client, error) {
 	client.Contacts            = &contacts{client: client}
 	client.Deals               = &deals{client: client}
 	client.FeedbackSubmissions = &feedbackSubmissions{client: client}
-	client.Products            = &products{client: client}
 	client.LineItems           = &lineItems{client: client}
+	client.Products            = &products{client: client}
+	client.Tickets             = &tickets{client: client}
 	
 	return client, nil
 }
