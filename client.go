@@ -28,6 +28,7 @@ type Client struct {
 	Companies    Companies
 	Contacts     Contacts
 	Deals        Deals
+	FeedbackSubmissions FeedbackSubmissions
 	Products     Products
 	LineItems    LineItems
 }
@@ -46,12 +47,13 @@ func NewClient(apiKey string) (*Client, error) {
 		Timeout: time.Duration(30 * time.Second),
 	}
 
-	client.Associations = &associations{client: client}
-	client.Companies    = &companies{client: client}
-	client.Contacts     = &contacts{client: client}
-	client.Deals        = &deals{client: client}
-	client.Products     = &products{client: client}
-	client.LineItems    = &lineItems{client: client}
+	client.Associations        = &associations{client: client}
+	client.Companies           = &companies{client: client}
+	client.Contacts            = &contacts{client: client}
+	client.Deals               = &deals{client: client}
+	client.FeedbackSubmissions = &feedbackSubmissions{client: client}
+	client.Products            = &products{client: client}
+	client.LineItems           = &lineItems{client: client}
 	
 	return client, nil
 }

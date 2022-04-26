@@ -5,8 +5,9 @@ import (
 )
 
 type ListOptions struct {
-	Limit int    `url:"limit,omitempty"`
-	After string `url:"after,omitempty"`
+	Limit    int    `url:"limit,omitempty"`
+	After    string `url:"after,omitempty"`
+	Archived bool   `url:"archived,omitempty"`
 }
 
 type Pagination struct {
