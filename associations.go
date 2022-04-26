@@ -97,8 +97,6 @@ type AssociationUpdateDefinitionOptions struct {
 	TypeId int64 `json:"associationTypeId"`
 }
 
-
-
 type AssocationDeleteDefinitionQuery struct {
 	FromObjectType string 
 	ToObjectType   string 
