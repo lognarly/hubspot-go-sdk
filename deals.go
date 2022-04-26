@@ -5,12 +5,12 @@ import (
 )
 
 type Deals interface {
-	List(options *DealListOptions) (*DealList, error)
+	List(query *DealListQuery) (*DealList, error)
 	Create(options *DealCreateOptions) (*Deal, error)
 	Read(dealId string) (*Deal, error)
 	Update(dealId string, options *DealUpdateOptions) (*Deal, error)
 	Archive(dealId string) (error)
-	BatchArchive(options *DealBatchArchiveOptions) (error)
+	BatchArchive(dealIds []string) (error)
 	BatchCreate(options *DealBatchCreateOptions) (*DealBatchCreateOutput, error)
 }
 
@@ -18,11 +18,8 @@ type deals struct {
 	client *Client
 }
 
-type DealQuery string
-
-type DealListOptions struct {
-	ListOptions
-	Properties  DealQuery `url:"properties,omitempty"`
+type DealListQuery struct {
+	ListQuery
 }
 
 type DealList struct {
@@ -66,14 +63,6 @@ type DealUpdateOptions struct {
 	Properties DealCreateOrUpdateProperties `json:"properties"`
 }
 
-type DealBatchArchiveOptions struct {
-	Inputs []ArchiveDeals `json:"inputs"`
-}
-
-type ArchiveDeals struct {
-	DealId string `json:"id"`
-}
-
 type DealBatchCreateOptions struct {
 	Inputs []DealCreateOptions `json:"inputs"`
 }
@@ -83,16 +72,16 @@ type DealBatchCreateOutput struct {
 	Results []Deal `json:"results"`
 }
 
-func (d *deals) List(options *DealListOptions) (*DealList, error) {
+func (z *deals) List(query *DealListQuery) (*DealList, error) {
 	u := fmt.Sprintf("crm/v3/objects/deals")
-	req, err := d.client.newHttpRequest("GET", u, options)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.List(): newHttpRequest(): %v", err)
 	}
 
 	dl := &DealList{}
 
-	err = d.client.do(req, dl)
+	err = z.client.do(req, dl)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.List(): do()(): %v", err)
 	}
@@ -100,10 +89,10 @@ func (d *deals) List(options *DealListOptions) (*DealList, error) {
 	return dl, nil
 }
 
-func (d *deals) Create(options *DealCreateOptions) (*Deal, error) {
+func (z *deals) Create(options *DealCreateOptions) (*Deal, error) {
 	u := fmt.Sprintf("crm/v3/objects/deals")
 	
-	req, err := d.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.Create(): newHttpRequest(): %v", err)
 	}
@@ -111,7 +100,7 @@ func (d *deals) Create(options *DealCreateOptions) (*Deal, error) {
 	deal := &Deal{}
 
 	
-	err = d.client.do(req, deal)
+	err = z.client.do(req, deal)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.Create(): do()(): %v", err)
 	}
@@ -119,10 +108,10 @@ func (d *deals) Create(options *DealCreateOptions) (*Deal, error) {
 	return deal, nil
 }
 
-func (d *deals) Read(dealId string) (*Deal, error) {
+func (z *deals) Read(dealId string) (*Deal, error) {
 	u := fmt.Sprintf("crm/v3/objects/deals/%s", dealId)
 	
-	req, err := d.client.newHttpRequest("GET", u, nil)
+	req, err := z.client.newHttpRequest("GET", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.Read(): newHttpRequest(): %v", err)
 	}
@@ -130,7 +119,7 @@ func (d *deals) Read(dealId string) (*Deal, error) {
 	deal := &Deal{}
 
 	
-	err = d.client.do(req, deal)
+	err = z.client.do(req, deal)
 	if err != nil {
 		return nil, fmt.Errorf("client.deal.Read(): do()(): %v", err)
 	}
@@ -138,16 +127,16 @@ func (d *deals) Read(dealId string) (*Deal, error) {
 	return deal, nil
 }
 
-func (d *deals) Update(dealId string, options *DealUpdateOptions) (*Deal, error) {
+func (z *deals) Update(dealId string, options *DealUpdateOptions) (*Deal, error) {
 	u := fmt.Sprintf("crm/v3/objects/deals/%s", dealId)
-	req, err := d.client.newHttpRequest("PATCH", u, options)
+	req, err := z.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.Update(): newHttpRequest(): %v", err)
 	}
 
 	deal := &Deal{}
 
-	err = d.client.do(req, deal)
+	err = z.client.do(req, deal)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.Update(): do(): %+v", err)
 	}
@@ -155,36 +144,44 @@ func (d *deals) Update(dealId string, options *DealUpdateOptions) (*Deal, error)
 	return deal, nil
 }
 
-func (d *deals) Archive(dealId string) (error) {
+func (z *deals) Archive(dealId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/deals/%s", dealId)
-	req, err := d.client.newHttpRequest("DELETE", u, nil)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.deals.Archive(): newHttpRequest(): %v", err)
 	}
 
-	return d.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (d *deals) BatchArchive(options *DealBatchArchiveOptions) (error) {
+func (z *deals) BatchArchive(dealIds []string) (error) {
 	u := fmt.Sprintf("/crm/v3/objects/deals/batch/archive")
-	req, err := d.client.newHttpRequest("POST", u, options)
+
+	options := BatchInputOptions{}
+	options.Inputs = make([]BatchInput, 0)
+
+	for _, dealId := range dealIds{
+		options.Inputs = append(options.Inputs, BatchInput{Id: dealId})
+	}
+
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return fmt.Errorf("client.contact.BatchArchive(): newHttpRequest(): %v", err)
 	}
 
-	return d.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (d *deals) BatchCreate(options *DealBatchCreateOptions) (*DealBatchCreateOutput, error) {
+func (z *deals) BatchCreate(options *DealBatchCreateOptions) (*DealBatchCreateOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/deals/batch/create")
-	req, err := d.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
 	deals := &DealBatchCreateOutput{}
 
-	err = d.client.do(req, deals)
+	err = z.client.do(req, deals)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.BatchCreate(): do(): %+v", err)
 	}

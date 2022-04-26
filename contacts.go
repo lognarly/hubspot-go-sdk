@@ -6,12 +6,12 @@ import (
 )
 
 type Contacts interface {
-	List(options *ContactListOptions) (*ContactList, error)
+	List(query *ContactListQuery) (*ContactList, error)
 	Create(options *ContactCreateOptions) (*Contact, error)
 	Read(contactId string) (*Contact, error)
 	Update(contactId string, options *ContactUpdateOptions) (*Contact, error)
-	Delete(contactId string) (error)
-	BatchArchive(options *ContactBatchArchiveOptions) (error)
+	Archive(contactId string) (error)
+	BatchArchive(contactIds []string) (error)
 	BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchCreateOutput, error)
 }
 
@@ -19,11 +19,8 @@ type contacts struct {
 	client *Client
 }
 
-type ContactQuery string
-
-type ContactListOptions struct {
-	ListOptions
-	Properties  ContactQuery `url:"properties,omitempty"`
+type ContactListQuery struct {
+	ListQuery
 }
 
 type ContactList struct {
@@ -73,28 +70,20 @@ type ContactCreateOrUpdateProperties struct {
 	Website          string   `json:"website,omitempty"`
 }
 
-type ContactBatchArchiveOptions struct {
-	Inputs []ArchiveContacts `json:"inputs"`
-}
-
-type ArchiveContacts struct {
-	ContactId string `json:"id"`
-}
-
 type ContactBatchCreateOptions struct {
 	Inputs []ContactCreateOptions `json:"inputs"`
 }
 
-func (c *contacts) List(options *ContactListOptions) (*ContactList, error) {
+func (z *contacts) List(query *ContactListQuery) (*ContactList, error) {
 	u := fmt.Sprintf("crm/v3/objects/contacts")
-	req, err := c.client.newHttpRequest("GET", u, options)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.List(): newHttpRequest(): %v", err)
 	}
 
 	cl := &ContactList{}
 
-	err = c.client.do(req, cl)
+	err = z.client.do(req, cl)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.List(): do(): %v", err)
 	}
@@ -102,16 +91,16 @@ func (c *contacts) List(options *ContactListOptions) (*ContactList, error) {
 	return cl, nil
 }
 
-func (c *contacts) Create(options *ContactCreateOptions) (*Contact, error) {
+func (z *contacts) Create(options *ContactCreateOptions) (*Contact, error) {
 	u := fmt.Sprintf("crm/v3/objects/contacts")
-	req, err := c.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Create(): newHttpRequest(): %+v", err)
 	}
 
 	contact := &Contact{}
 
-	err = c.client.do(req, contact)
+	err = z.client.do(req, contact)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Create(): do(): %+v", err)
 	}
@@ -119,16 +108,16 @@ func (c *contacts) Create(options *ContactCreateOptions) (*Contact, error) {
 	return contact, nil
 }
 
-func (c *contacts) Read(contactId string) (*Contact, error) {
+func (z *contacts) Read(contactId string) (*Contact, error) {
 	u := fmt.Sprintf("crm/v3/objects/contacts/%s", contactId)
-	req, err := c.client.newHttpRequest("GET", u, nil)
+	req, err := z.client.newHttpRequest("GET", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Read(): newHttpRequest(): %v", err)
 	}
 
 	contact := &Contact{}
 
-	err = c.client.do(req, contact)
+	err = z.client.do(req, contact)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Read(): do(): %+v", err)
 	}
@@ -136,16 +125,16 @@ func (c *contacts) Read(contactId string) (*Contact, error) {
 	return contact, nil
 }
 
-func (c *contacts) Update(contactId string, options *ContactUpdateOptions) (*Contact, error) {
+func (z *contacts) Update(contactId string, options *ContactUpdateOptions) (*Contact, error) {
 	u := fmt.Sprintf("crm/v3/objects/contacts/%s", contactId)
-	req, err := c.client.newHttpRequest("PATCH", u, options)
+	req, err := z.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Update(): newHttpRequest(): %v", err)
 	}
 
 	contact := &Contact{}
 
-	err = c.client.do(req, contact)
+	err = z.client.do(req, contact)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.Update(): do(): %+v", err)
 	}
@@ -153,36 +142,44 @@ func (c *contacts) Update(contactId string, options *ContactUpdateOptions) (*Con
 	return contact, nil
 }
 
-func (c *contacts) Delete(contactId string) (error) {
+func (z *contacts) Archive(contactId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/contacts/%s", contactId)
-	req, err := c.client.newHttpRequest("DELETE", u, nil)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
-		return fmt.Errorf("client.contact.Delete(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.contact.Archive(): newHttpRequest(): %v", err)
 	}
 
-	return c.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (c *contacts) BatchArchive(options *ContactBatchArchiveOptions) (error) {
+func (z *contacts) BatchArchive(contactIds []string) (error) {
 	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/archive")
-	req, err := c.client.newHttpRequest("POST", u, options)
+
+	options := BatchInputOptions{}
+	options.Inputs = make([]BatchInput, 0)
+
+	for _, contactId := range contactIds{
+		options.Inputs = append(options.Inputs, BatchInput{Id: contactId})
+	}
+
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return fmt.Errorf("client.contact.BatchArchive(): newHttpRequest(): %v", err)
 	}
 
-	return c.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (c *contacts) BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchCreateOutput, error) {
+func (z *contacts) BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchCreateOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/create")
-	req, err := c.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
 	contacts := &ContactBatchCreateOutput{}
 
-	err = c.client.do(req, contacts)
+	err = z.client.do(req, contacts)
 	if err != nil {
 		return nil, fmt.Errorf("client.contact.BatchCreate(): do(): %+v", err)
 	}

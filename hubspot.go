@@ -4,12 +4,12 @@ import (
 	//"encoding/json"
 )
 
-type ListAssociationsOptions struct {
+type ListAssociationsQuery struct {
 	Limit    int    `url:"limit,omitempty"`
 	After    string `url:"after,omitempty"`
 }
 
-type ListOptions struct {
+type ListQuery struct {
 	Limit                 int32    `url:"limit,omitempty"`
 	After                 string   `url:"after,omitempty"`
 	Properties            []string `url:"properties,omitempty"`
@@ -18,7 +18,7 @@ type ListOptions struct {
 	Archived              bool     `url:"archived"`
 }
 
-type ReadOptions struct {
+type ReadQuery struct {
 	Properties            []string `url:"properties,omitempty"`
 	PropertiesWithHistory []string `url:"propertiesWithHistory"`
 	Associations          []string `url:"associations,omitempty"`
@@ -86,12 +86,18 @@ type BatchReadQuery struct {
 	Archived bool `url:"archived,omitempty"`
 }
 
-type BatchInputs struct {
+type BatchInputOptions struct {
 	Inputs []BatchInput `json:"inputs,omitempty"`
 }
 
 type BatchInput struct {
 	Id string `json:"id"`
+}
+
+type BatchReadOptions struct {
+	Properties            []string `json:"properties"`
+	PropertiesWithHistory []string `json:"propertiesWithHistory"`
+	IdProperty            string   `json:"idProperty"`
 }
 
 type MergeOptions struct {

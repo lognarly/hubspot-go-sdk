@@ -6,7 +6,7 @@ import (
 )
 
 type Associations interface {
-	List(options *AssociationListOptions, query *AssociationListQuery) (*AssociationList, error)
+	List(fromObjectType string, fromObjectId int64, toObjectType string, query *AssociationListQuery) (*AssociationList, error)
 	Create(options *[]AssociationCreateOptions, query *AssociationCreateOrDeleteQuery) (*AssociationCreateOutput, error)
 	Delete(query *AssociationCreateOrDeleteQuery) (error)
 	ReadDefinition(query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
@@ -18,14 +18,8 @@ type associations struct {
 	client *Client
 }
 
-type AssociationListOptions struct {
-	ListOptions
-}
-
 type AssociationListQuery struct {
-	FromObjectType  string
-	FromObjectId    int64
-	ToObjectType    string
+	ListAssociationsQuery
 }
 
 type AssociationList struct {
@@ -103,9 +97,9 @@ type AssocationDeleteDefinitionQuery struct {
 	TypeId         int64  
 }
 
-func (a *associations) List(options *AssociationListOptions, query *AssociationListQuery) (*AssociationList, error) {
-	u := fmt.Sprintf("crm/v4/objects/%s/%s/associations/%s", query.FromObjectType, strconv.FormatInt(query.FromObjectId, 10), query.ToObjectType)
-	req, err := a.client.newHttpRequest("GET", u, options)
+func (a *associations) List(fromObjectType string, fromObjectId int64, toObjectType string, query *AssociationListQuery) (*AssociationList, error) {
+	u := fmt.Sprintf("crm/v4/objects/%s/%s/associations/%s", fromObjectType, strconv.FormatInt(fromObjectId, 10), toObjectType)
+	req, err := a.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.association.List(): newHttpRequest(): %v", err)
 	}

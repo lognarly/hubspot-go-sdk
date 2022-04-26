@@ -14,7 +14,7 @@ type Tickets interface {
 	BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchResults, error)
 	BatchRead(options *TicketBatchReadOptions) (*TicketBatchResults, error)
 	BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchResults, error)
-	Search(options *SearchOptions) (*TicketSearchResults, error)
+	Search(options *TicketSearchOptions) (*TicketSearchResults, error)
 	Merge(options *MergeOptions) (*Ticket, error)
 }
 
@@ -23,10 +23,7 @@ type tickets struct {
 }
 
 type TicketsListQuery struct {
-	ListOptions
-	Properties            []string `url:"properties,omitempty"`
-	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
-	Associations          []string `url:"associations,omitempty"`
+	ListQuery
 }
 
 type TicketList struct {
@@ -82,14 +79,15 @@ type TicketBatchResults struct {
 }
 
 type TicketBatchReadOptions struct {
-	Properties            []string `json:"properties"`
-	PropertiesWithHistory []string `json:"propertiesWithHistory"`
-	IdProperty            string   `json:"idProperty"`
-	BatchInputs
+	BatchReadOptions
 }
 
 type TicketBatchUpdateOptions struct {
 	Inputs []Ticket `json:"inputs"`
+}
+
+type TicketSearchOptions struct {
+	SearchOptions
 }
 
 type TicketSearchResults struct {
@@ -178,7 +176,7 @@ func (z *tickets) Archive(ticketId string) (error) {
 func (z *tickets) BatchArchive(ticketIds []string) (error) {
 	u := fmt.Sprintf("/crm/v3/objects/tickets/batch/archive")
 
-	options := BatchInputs{}
+	options := BatchInputOptions{}
 	options.Inputs = make([]BatchInput, 0)
 
 	for _, ticketId := range ticketIds{
@@ -244,7 +242,7 @@ func (z *tickets) BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchRe
 	return tbr, nil
 }
 
-func (z *tickets) Search(options *SearchOptions) (*TicketSearchResults, error) {
+func (z *tickets) Search(options *TicketSearchOptions) (*TicketSearchResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/tickets/search")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {

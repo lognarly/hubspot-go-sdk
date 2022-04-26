@@ -5,12 +5,12 @@ import (
 )
 
 type LineItems interface {
-	List(options *LineItemListOptions) (*LineItemList, error)
+	List(query *LineItemListQuery) (*LineItemList, error)
 	Create(options *LineItemCreateOptions) (*LineItem, error)
 	Read(lineItemId string) (*LineItem, error)
 	Update(lineItemId string, options *LineItemUpdateOptions) (*LineItem, error)
 	Archive(lineItemId string) (error)
-	BatchArchive(options *LineItemBatchArchiveOptions) (error)
+	BatchArchive(lineItemIds []string) (error)
 	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateResults, error)
 }
 
@@ -20,9 +20,8 @@ type lineItems struct {
 
 type LineItemQuery string
 
-type LineItemListOptions struct {
-	ListOptions
-	Properties  LineItemQuery `url:"properties,omitempty"`
+type LineItemListQuery struct {
+	ListQuery
 }
 
 type LineItemList struct {
@@ -31,11 +30,11 @@ type LineItemList struct {
 }
 
 type LineItem struct {
-	ID string `json:"id"`
+	ID         string             `json:"id"`
 	Properties LineItemProperties `json:"properties"`
-	CreatedAt  string         `json:"createdAt"`
-	UpdatedAt  string         `json:"updatedAt"`
-	Archived   bool           `json:"archived"`
+	CreatedAt  string             `json:"createdAt"`
+	UpdatedAt  string             `json:"updatedAt"`
+	Archived   bool               `json:"archived"`
 }
 
 type LineItemProperties struct {
@@ -63,14 +62,6 @@ type LineItemUpdateOptions struct {
 	Properties LineItemCreateOrUpdateProperties `json:"properties"`
 }
 
-type LineItemBatchArchiveOptions struct {
-	Inputs []ArchiveLineItems `json:"inputs"`
-}
-
-type ArchiveLineItems struct {
-	LineItemId string `json:"id"`
-}
-
 type LineItemBatchCreateOptions struct {
 	Inputs []LineItemCreateOptions `json:"inputs"`
 }
@@ -80,9 +71,21 @@ type LineItemBatchCreateResults struct {
 	Results []LineItem `json:"results"`
 }
 
-func (l *lineItems) List(options *LineItemListOptions) (*LineItemList, error) {
+type LineItemBatchReadOptions struct {
+	BatchReadOptions
+}
+
+type LineItemBatchReadResults struct {
+	Status  string     `json:"status"`
+	Results []LineItem `json:"results"`
+	RequestedAt string  `json:"requestedAt"`
+	StartedAt   string  `json:"startedAt"`
+	CompletedAt string  `json:"completedAt"`
+}
+
+func (l *lineItems) List(query *LineItemListQuery) (*LineItemList, error) {
 	u := fmt.Sprintf("crm/v3/objects/lineitems")
-	req, err := l.client.newHttpRequest("GET", u, options)
+	req, err := l.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItem.List(): newHttpRequest(): %v", err)
 	}
@@ -158,8 +161,16 @@ func (l *lineItems) Archive(lineItemId string) (error) {
 	return l.client.do(req, nil)
 }
 
-func (l *lineItems) BatchArchive(options *LineItemBatchArchiveOptions) (error) {
+func (l *lineItems) BatchArchive(lineItemIds []string) (error) {
 	u := fmt.Sprintf("/crm/v3/objects/lineitems/batch/archive")
+
+	options := BatchInputOptions{}
+	options.Inputs = make([]BatchInput, 0)
+
+	for _, lineItemId := range lineItemIds{
+		options.Inputs = append(options.Inputs, BatchInput{Id: lineItemId})
+	}
+
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return fmt.Errorf("client.lineItem.BatchArchive(): newHttpRequest(): %v", err)
@@ -183,4 +194,21 @@ func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemB
 	}
 
 	return lineItems, nil
+}
+
+func (z *lineItems) BatchRead(options *LineItemBatchReadOptions) (*LineItemBatchReadResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/read")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItem.BatchRead(): newHttpRequest(): %v", err)
+	}
+
+	lbrr := &LineItemBatchReadResults{}
+
+	err = z.client.do(req, lbrr)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItem.BatchRead(): do(): %+v", err)
+	}
+
+	return lbrr, nil
 }

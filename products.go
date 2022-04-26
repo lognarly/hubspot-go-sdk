@@ -5,12 +5,12 @@ import (
 )
 
 type Products interface {
-	List(options *ProductListOptions) (*ProductList, error)
+	List(query *ProductListQuery) (*ProductList, error)
 	Create(options *ProductCreateOptions) (*Product, error)
 	Read(productId string) (*Product, error)
 	Update(productId string, options *ProductUpdateOptions) (*Product, error)
 	Archive(productId string) (error)
-	BatchArchive(options *ProductBatchArchiveOptions) (error)
+	BatchArchive(productIds []string) (error)
 	BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchCreateOutput, error)
 }
 
@@ -20,9 +20,8 @@ type products struct {
 
 type ProductQuery string
 
-type ProductListOptions struct {
-	ListOptions
-	Properties  ProductQuery `url:"properties,omitempty"`
+type ProductListQuery struct {
+	ListQuery
 }
 
 type ProductList struct {
@@ -63,14 +62,6 @@ type ProductUpdateOptions struct {
 	Properties ProductCreateOrUpdateProperties `json:"properties"`
 }
 
-type ProductBatchArchiveOptions struct {
-	Inputs []ArchiveProducts `json:"inputs"`
-}
-
-type ArchiveProducts struct {
-	ProductId string `json:"id"`
-}
-
 type ProductBatchCreateOptions struct {
 	Inputs []ProductCreateOptions `json:"inputs"`
 }
@@ -80,16 +71,16 @@ type ProductBatchCreateOutput struct {
 	Results []Product `json:"results"`
 }
 
-func (p *products) List(options *ProductListOptions) (*ProductList, error) {
+func (z *products) List(query *ProductListQuery) (*ProductList, error) {
 	u := fmt.Sprintf("crm/v3/objects/products")
-	req, err := p.client.newHttpRequest("GET", u, options)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.List(): newHttpRequest(): %v", err)
 	}
 
 	pl := &ProductList{}
 
-	err = p.client.do(req, pl)
+	err = z.client.do(req, pl)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.List(): do(): %v", err)
 	}
@@ -97,16 +88,16 @@ func (p *products) List(options *ProductListOptions) (*ProductList, error) {
 	return pl, nil
 }
 
-func (p *products) Create(options *ProductCreateOptions) (*Product, error) {
+func (z *products) Create(options *ProductCreateOptions) (*Product, error) {
 	u := fmt.Sprintf("/crm/v3/objects/products")
-	req, err := p.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Create(): newHttpRequest(): %+v", err)
 	}
 
 	product := &Product{}
 
-	err = p.client.do(req, product)
+	err = z.client.do(req, product)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Create(): do(): %+v", err)
 	}
@@ -114,16 +105,16 @@ func (p *products) Create(options *ProductCreateOptions) (*Product, error) {
 	return product, nil
 }
 
-func (p *products) Read(productId string) (*Product, error) {
+func (z *products) Read(productId string) (*Product, error) {
 	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
-	req, err := p.client.newHttpRequest("GET", u, nil)
+	req, err := z.client.newHttpRequest("GET", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Read(): newHttpRequest(): %v", err)
 	}
 
 	product := &Product{}
 
-	err = p.client.do(req, product)
+	err = z.client.do(req, product)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Read(): do(): %+v", err)
 	}
@@ -131,16 +122,16 @@ func (p *products) Read(productId string) (*Product, error) {
 	return product, nil
 }
 
-func (p *products) Update(productId string, options *ProductUpdateOptions) (*Product, error) {
+func (z *products) Update(productId string, options *ProductUpdateOptions) (*Product, error) {
 	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
-	req, err := p.client.newHttpRequest("PATCH", u, options)
+	req, err := z.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Update(): newHttpRequest(): %v", err)
 	}
 
 	product := &Product{}
 
-	err = p.client.do(req, product)
+	err = z.client.do(req, product)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.Update(): do(): %+v", err)
 	}
@@ -148,46 +139,44 @@ func (p *products) Update(productId string, options *ProductUpdateOptions) (*Pro
 	return product, nil
 }
 
-func (p *products) Archive(productId string) (error) {
+func (z *products) Archive(productId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
-	req, err := p.client.newHttpRequest("DELETE", u, nil)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.product.Archive(): newHttpRequest(): %v", err)
 	}
 
-	return p.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (p *products) Delete(productId string) (error) {
-	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
-	req, err := p.client.newHttpRequest("DELETE", u, nil)
-	if err != nil {
-		return fmt.Errorf("client.product.Delete(): newHttpRequest(): %v", err)
+func (z *products) BatchArchive(productIds []string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/batch/archive")
+
+	options := BatchInputOptions{}
+	options.Inputs = make([]BatchInput, 0)
+
+	for _, productId := range productIds{
+		options.Inputs = append(options.Inputs, BatchInput{Id: productId})
 	}
 
-	return p.client.do(req, nil)
-}
-
-func (p *products) BatchArchive(options *ProductBatchArchiveOptions) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/products/batch/archive")
-	req, err := p.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return fmt.Errorf("client.product.BatchArchive(): newHttpRequest(): %v", err)
 	}
 
-	return p.client.do(req, nil)
+	return z.client.do(req, nil)
 }
 
-func (p *products) BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchCreateOutput, error) {
+func (z *products) BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchCreateOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/products/batch/create")
-	req, err := p.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
 	products := &ProductBatchCreateOutput{}
 
-	err = p.client.do(req, products)
+	err = z.client.do(req, products)
 	if err != nil {
 		return nil, fmt.Errorf("client.product.BatchCreate(): do(): %+v", err)
 	}

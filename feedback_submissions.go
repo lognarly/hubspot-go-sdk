@@ -5,7 +5,7 @@ import (
 )
 
 type FeedbackSubmissions interface {
-    ListAssociations(feedbackSubmissionId string, toObjectType string, options *FeedbackSubmissionListAssociationOptions) (*FeedbackSubmissionAssociations, error)
+    ListAssociations(feedbackSubmissionId string, toObjectType string, query *FeedbackSubmissionListAssociationQuery) (*FeedbackSubmissionAssociations, error)
     List(query *FeedbackSubmissionListQuery) (*FeedbackSubmissionList, error)
     Read(feedbackSubmissionId string, query *FeedbackSubmissionReadQuery) (*FeedbackSubmission, error)
     BatchRead(options *FeedbackSubmissionBatchReadOptions) (*FeedbackSubmissionBatchReadResults, error)
@@ -16,8 +16,8 @@ type feedbackSubmissions struct {
     client *Client
 }
 
-type FeedbackSubmissionListAssociationOptions struct {
-	ListOptions
+type FeedbackSubmissionListAssociationQuery struct {
+	ListAssociationsQuery
 }
 
 type FeedbackSubmissionAssociations struct {
@@ -31,10 +31,7 @@ type FeedbackSubmissionAssociation struct {
 }
 
 type FeedbackSubmissionListQuery struct {
-	ListOptions
-	Properties            []string `url:"properties,omitempty"`
-	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
-	Associations          []string `url:"associations,omitempty"`
+	ListQuery
 }
 
 type FeedbackSubmissionList struct {
@@ -68,10 +65,7 @@ type FeedbackSubmissionReadQuery struct {
 }
 
 type FeedbackSubmissionBatchReadOptions struct {
-	Properties            []string                        `json:"properties,omitempty"`
-	PropertiesWithHistory []string                        `json:"propertiesWithHistory"`
-	IdProperty            string                          `json:"idProperty"`
-	Inputs                []struct{Id string `json:"id"`} `json:"inputs"`
+	BatchReadOptions
 }
 
 type FeedbackSubmissionBatchReadResults struct {
@@ -84,30 +78,25 @@ type FeedbackSubmissionBatchReadResults struct {
 }
 
 type FeedbackSubmissionSearchOptions struct {
-	FilterGroups []Filters `json:"filterGroups,omitempty"`
-	Sorts        []string  `json:"sorts,omitempty"`
-	Query        string    `json:"query,omitempty"`
-	Properties   []string  `json:"properties,omitempty"`
-	Limit        int64     `json:"limit,omitempty"`
-	After        int64     `json:"after,omitempty"`
+	SearchOptions
 }
 
 type FeedbackSubmissionSearchResults struct {
-	Total      int64 `json:"total"`
+	Total      int64                `json:"total"`
 	Results    []FeedbackSubmission `json:"results"`
 	Pagination
 }
 
-func (f *feedbackSubmissions) ListAssociations(feedbackSubmissionId string, toObjectType string, options *FeedbackSubmissionListAssociationOptions) (*FeedbackSubmissionAssociations, error) {
+func (z *feedbackSubmissions) ListAssociations(feedbackSubmissionId string, toObjectType string, query *FeedbackSubmissionListAssociationQuery) (*FeedbackSubmissionAssociations, error) {
 	u := fmt.Sprintf("/crm/v3/objects/feedback_submissions/%s/associations/%s", feedbackSubmissionId, toObjectType)
-	req, err := f.client.newHttpRequest("GET", u, options)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.ListAssociations(): newHttpRequest(): %v", err)
 	}
 
 	fsa := &FeedbackSubmissionAssociations{}
 
-	err = f.client.do(req, fsa)
+	err = z.client.do(req, fsa)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.ListAssociations(): do(): %v", err)
 	}
@@ -115,16 +104,16 @@ func (f *feedbackSubmissions) ListAssociations(feedbackSubmissionId string, toOb
 	return fsa, nil
 }
 
-func (f *feedbackSubmissions) List(query *FeedbackSubmissionListQuery) (*FeedbackSubmissionList, error) {
+func (z *feedbackSubmissions) List(query *FeedbackSubmissionListQuery) (*FeedbackSubmissionList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/feedback_submissions")
-	req, err := f.client.newHttpRequest("GET", u, query)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.List(): newHttpRequest(): %v", err)
 	}
 
 	fsl := &FeedbackSubmissionList{}
 
-	err = f.client.do(req, fsl)
+	err = z.client.do(req, fsl)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.List(): do(): %v", err)
 	}
@@ -132,16 +121,16 @@ func (f *feedbackSubmissions) List(query *FeedbackSubmissionListQuery) (*Feedbac
 	return fsl, nil
 }
 
-func (f *feedbackSubmissions) Read(feedbackSubmissionId string, query *FeedbackSubmissionReadQuery) (*FeedbackSubmission, error) {
+func (z *feedbackSubmissions) Read(feedbackSubmissionId string, query *FeedbackSubmissionReadQuery) (*FeedbackSubmission, error) {
 	u := fmt.Sprintf("/crm/v3/objects/feedback_submissions/%s", feedbackSubmissionId)
-	req, err := f.client.newHttpRequest("GET", u, query)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.Read(): newHttpRequest(): %v", err)
 	}
 
 	fs := &FeedbackSubmission{}
 
-	err = f.client.do(req, fs)
+	err = z.client.do(req, fs)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.Read(): do(): %v", err)
 	}
@@ -149,16 +138,16 @@ func (f *feedbackSubmissions) Read(feedbackSubmissionId string, query *FeedbackS
 	return fs, nil
 }
 
-func (f *feedbackSubmissions) BatchRead(options *FeedbackSubmissionBatchReadOptions) (*FeedbackSubmissionBatchReadResults, error) {
+func (z *feedbackSubmissions) BatchRead(options *FeedbackSubmissionBatchReadOptions) (*FeedbackSubmissionBatchReadResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/feedback_submissions/batch/read")
-	req, err := f.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.BatchRead(): newHttpRequest(): %v", err)
 	}
 
 	fsbrr := &FeedbackSubmissionBatchReadResults{}
 
-	err = f.client.do(req, fsbrr)
+	err = z.client.do(req, fsbrr)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.BatchRead(): do(): %v", err)
 	}
@@ -166,16 +155,16 @@ func (f *feedbackSubmissions) BatchRead(options *FeedbackSubmissionBatchReadOpti
 	return fsbrr, nil
 }
 
-func (f *feedbackSubmissions) Search(options *FeedbackSubmissionSearchOptions) (*FeedbackSubmissionSearchResults, error) {
+func (z *feedbackSubmissions) Search(options *FeedbackSubmissionSearchOptions) (*FeedbackSubmissionSearchResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/feedback_submissions/search")
-	req, err := f.client.newHttpRequest("POST", u, options)
+	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.Search(): newHttpRequest(): %v", err)
 	}
 
 	fsso := &FeedbackSubmissionSearchResults{}
 
-	err = f.client.do(req, fsso)
+	err = z.client.do(req, fsso)
 	if err != nil {
 		return nil, fmt.Errorf("client.feedbackSubmissions.Search(): do(): %v", err)
 	}

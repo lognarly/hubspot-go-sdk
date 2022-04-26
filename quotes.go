@@ -9,7 +9,7 @@ type Quotes interface {
 	List(query *QuotesListQuery) (*QuotesList, error)
 	Read(quoteId string, query *QuotesReadQuery) (*Quote, error)
 	BatchRead(options *QuotesBatchReadOptions) (*QuotesBatchReadResults, error)
-	Search(options *SearchOptions) (*QuotesSearchResults, error)
+	Search(options *QuotesSearchOptions) (*QuotesSearchResults, error)
 }
 
 type quotes struct {
@@ -17,7 +17,7 @@ type quotes struct {
 }
 
 type QuotesListAssociationsQuery struct {
-	ListAssociationsOptions
+	ListAssociationsQuery
 }
 
 type QuotesAssociationsList struct {
@@ -31,7 +31,7 @@ type QuotesAssociations struct {
 }
 
 type QuotesListQuery struct {
-	ListOptions
+	ListQuery
 }
 
 type QuotesList struct {
@@ -56,7 +56,7 @@ type QuotesListProperties struct {
 }
 
 type QuotesReadQuery struct {
-	ReadOptions
+	ReadQuery
 }
 
 type QuotesBatchReadQuery struct {
@@ -64,10 +64,7 @@ type QuotesBatchReadQuery struct {
 }
 
 type QuotesBatchReadOptions struct {
-	Properties            []string `json:"properties,omitempty"`
-	PropertiesWithHistory []string `json:"propertiesWithHistory,omitempty"`
-	IdProperty            string   `json:"idProperty"`
-	BatchInputs
+	BatchReadOptions
 }
 
 type QuotesBatchReadResults struct {
@@ -76,6 +73,10 @@ type QuotesBatchReadResults struct {
 	RequestedAt string  `json:"requestedAt"`
 	StartedAt   string  `json:"startedAt"`
 	CompletedAt string  `json:"completedAt"`
+}
+
+type QuotesSearchOptions struct {
+	SearchOptions
 }
 
 type QuotesSearchResults struct {
@@ -151,7 +152,7 @@ func (z *quotes) BatchRead(options *QuotesBatchReadOptions) (*QuotesBatchReadRes
 	return qbrr, nil
 }
 
-func (z *quotes) Search(options *SearchOptions) (*QuotesSearchResults, error) {
+func (z *quotes) Search(options *QuotesSearchOptions) (*QuotesSearchResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes/search")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
