@@ -106,14 +106,14 @@ func (z *companies) List(query *CompanyListQuery) (*CompanyList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies")
 	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.List(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.List(): newHttpRequest(): %v", err)
 	}
 
 	cl := &CompanyList{}
 
 	err = z.client.do(req, cl)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.List(): do(): %v", err)
+		return nil, fmt.Errorf("client.companies.List(): do(): %v", err)
 	}
 	
 	return cl, nil
@@ -123,14 +123,14 @@ func (z *companies) Create(options *CompanyCreateOrUpdateOptions) (*Company, err
 	u := fmt.Sprintf("/crm/v3/objects/companies")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Create(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.Create(): newHttpRequest(): %v", err)
 	}
 
 	company := &Company{}
 
 	err = z.client.do(req, company)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Create(): do(): %v", err)
+		return nil, fmt.Errorf("client.companies.Create(): do(): %v", err)
 	}
 	
 	return company, nil
@@ -140,14 +140,14 @@ func (z *companies) Read(query *CompanyReadQuery, companyId string) (*Company, e
 	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", companyId)
 	req, err := z.client.newHttpRequest("GET", u, nil)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Read(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.Read(): newHttpRequest(): %v", err)
 	}
 
 	company := &Company{}
 
 	err = z.client.do(req, company)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Read(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.Read(): do(): %+v", err)
 	}
 
 	return company, nil
@@ -157,14 +157,14 @@ func (z *companies) Update(options *CompanyCreateOrUpdateOptions, companyId stri
 	u := fmt.Sprintf("crm/v3/objects/companies/%s", companyId)
 	req, err := z.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Update(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.Update(): newHttpRequest(): %v", err)
 	}
 
 	company := &Company{}
 
 	err = z.client.do(req, company)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Update(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.Update(): do(): %+v", err)
 	}
 
 	return company, nil
@@ -174,7 +174,7 @@ func (z *companies) Archive(companyId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/companies/%s", companyId)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
-		return fmt.Errorf("client.Companies.Delete(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.companies.Archive(): newHttpRequest(): %v", err)
 	}
 
 	return z.client.do(req, nil)
@@ -192,7 +192,7 @@ func (z *companies) BatchArchive(companyIds []string) (error) {
 
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return fmt.Errorf("client.Comanies.BatchArchive(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.companies.BatchArchive(): newHttpRequest(): %v", err)
 	}
 
 	return z.client.do(req, nil)
@@ -202,14 +202,14 @@ func (z *companies) BatchCreate(options *CompanyBatchCreateOrUpdateOptions) (*Co
 	u := fmt.Sprintf("/crm/v3/objects/companies/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.BatchCreate(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
 	companies := &CompanyBatchCreateOrUpdateResults{}
 
 	err = z.client.do(req, companies)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.BatchCreate(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.BatchCreate(): do(): %+v", err)
 	}
 
 	return companies, nil
@@ -219,14 +219,14 @@ func (z *companies) BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*Co
 	u := fmt.Sprintf("/crm/v3/objects/companies/batch/update")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.BatchUpdate(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.BatchUpdate(): newHttpRequest(): %v", err)
 	}
 
 	companies := &CompanyBatchCreateOrUpdateResults{}
 
 	err = z.client.do(req, companies)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.BatchUpdate(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.BatchUpdate(): do(): %+v", err)
 	}
 
 	return companies, nil
@@ -236,14 +236,14 @@ func (z *companies) Search(options *CompanySearchOptions) (*CompanySearchResults
 	u := fmt.Sprintf("/crm/v3/objects/companies/search")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Search(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.Search(): newHttpRequest(): %v", err)
 	}
 
 	companies := &CompanySearchResults{}
 
 	err = z.client.do(req, companies)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Search(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.Search(): do(): %+v", err)
 	}
 
 	return companies, nil
@@ -253,14 +253,14 @@ func (z *companies) Merge(options *MergeOptions) (*Company, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/merge")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Merge(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.companies.Merge(): newHttpRequest(): %v", err)
 	}
 
 	company := &Company{}
 
 	err = z.client.do(req, company)
 	if err != nil {
-		return nil, fmt.Errorf("client.Companies.Merge(): do(): %+v", err)
+		return nil, fmt.Errorf("client.companies.Merge(): do(): %+v", err)
 	}
 
 	return company, nil

@@ -76,8 +76,8 @@ type LineItemBatchReadOptions struct {
 }
 
 type LineItemBatchReadResults struct {
-	Status  string     `json:"status"`
-	Results []LineItem `json:"results"`
+	Status      string     `json:"status"`
+	Results     []LineItem `json:"results"`
 	RequestedAt string  `json:"requestedAt"`
 	StartedAt   string  `json:"startedAt"`
 	CompletedAt string  `json:"completedAt"`
@@ -87,14 +87,14 @@ func (l *lineItems) List(query *LineItemListQuery) (*LineItemList, error) {
 	u := fmt.Sprintf("crm/v3/objects/lineitems")
 	req, err := l.client.newHttpRequest("GET", u, query)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.List(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.lineItems.List(): newHttpRequest(): %v", err)
 	}
 
 	pl := &LineItemList{}
 
 	err = l.client.do(req, pl)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.List(): do(): %v", err)
+		return nil, fmt.Errorf("client.lineItems.List(): do(): %v", err)
 	}
 	
 	return pl, nil
@@ -104,14 +104,14 @@ func (l *lineItems) Create(options *LineItemCreateOptions) (*LineItem, error) {
 	u := fmt.Sprintf("/crm/v3/objects/lineitems")
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.Create(): newHttpRequest(): %+v", err)
+		return nil, fmt.Errorf("client.lineItems.Create(): newHttpRequest(): %+v", err)
 	}
 
 	lineItem := &LineItem{}
 
 	err = l.client.do(req, lineItem)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.Create(): do(): %+v", err)
+		return nil, fmt.Errorf("client.lineItems.Create(): do(): %+v", err)
 	}
 
 	return lineItem, nil
@@ -121,14 +121,14 @@ func (l *lineItems) Read(lineItemId string) (*LineItem, error) {
 	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
 	req, err := l.client.newHttpRequest("GET", u, nil)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.Read(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.lineItems.Read(): newHttpRequest(): %v", err)
 	}
 
 	lineItem := &LineItem{}
 
 	err = l.client.do(req, lineItem)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.Read(): do(): %+v", err)
+		return nil, fmt.Errorf("client.lineItems.Read(): do(): %+v", err)
 	}
 
 	return lineItem, nil
@@ -155,7 +155,7 @@ func (l *lineItems) Archive(lineItemId string) (error) {
 	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
 	req, err := l.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
-		return fmt.Errorf("client.lineItem.Delete(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.lineItems.Archive(): newHttpRequest(): %v", err)
 	}
 
 	return l.client.do(req, nil)
@@ -173,7 +173,7 @@ func (l *lineItems) BatchArchive(lineItemIds []string) (error) {
 
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return fmt.Errorf("client.lineItem.BatchArchive(): newHttpRequest(): %v", err)
+		return fmt.Errorf("client.lineItems.BatchArchive(): newHttpRequest(): %v", err)
 	}
 
 	return l.client.do(req, nil)
@@ -183,7 +183,7 @@ func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemB
 	u := fmt.Sprintf("/crm/v3/objects/lineitems/batch/create")
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.BatchCreate(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.lineItems.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
 	lineItems := &LineItemBatchCreateResults{}
@@ -200,14 +200,14 @@ func (z *lineItems) BatchRead(options *LineItemBatchReadOptions) (*LineItemBatch
 	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/read")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.BatchRead(): newHttpRequest(): %v", err)
+		return nil, fmt.Errorf("client.lineItems.BatchRead(): newHttpRequest(): %v", err)
 	}
 
 	lbrr := &LineItemBatchReadResults{}
 
 	err = z.client.do(req, lbrr)
 	if err != nil {
-		return nil, fmt.Errorf("client.lineItem.BatchRead(): do(): %+v", err)
+		return nil, fmt.Errorf("client.lineItems.BatchRead(): do(): %+v", err)
 	}
 
 	return lbrr, nil
