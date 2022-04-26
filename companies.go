@@ -53,7 +53,7 @@ type CompanyProperties struct {
 	City             string `json:"city"`
 	CreateDate       string `json:"createdate"`
 	Domain           string `json:"domain"`
-	HSObjectID       string `hs_object_id`
+	HSObjectID       string `json:"hs_object_id"`
 	LastModifiedDate string `json:"hs_lastmodifieddate"`
 	Industry         string `json:"industry"`
 	Name             string `json:"name"`

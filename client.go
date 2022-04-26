@@ -32,6 +32,7 @@ type Client struct {
 	LineItems           LineItems
 	Products            Products
 	Tickets             Tickets
+	Quotes              Quotes
 }
 
 func NewClient(apiKey string) (*Client, error) {
@@ -56,6 +57,7 @@ func NewClient(apiKey string) (*Client, error) {
 	client.LineItems           = &lineItems{client: client}
 	client.Products            = &products{client: client}
 	client.Tickets             = &tickets{client: client}
+	client.Quotes              = &quotes{client: client}
 	
 	return client, nil
 }
