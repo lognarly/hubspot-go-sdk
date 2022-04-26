@@ -4,10 +4,26 @@ import (
 	//"encoding/json"
 )
 
-type ListOptions struct {
+type ListAssociationsOptions struct {
 	Limit    int    `url:"limit,omitempty"`
 	After    string `url:"after,omitempty"`
-	Archived bool   `url:"archived,omitempty"`
+}
+
+type ListOptions struct {
+	Limit                 int32    `url:"limit,omitempty"`
+	After                 string   `url:"after,omitempty"`
+	Properties            []string `url:"properties,omitempty"`
+	PropertiesWithHistory []string `url:"propertiesWithHistory"`
+	Associations          []string `url:"associations,omitempty"`
+	Archived              bool     `url:"archived"`
+}
+
+type ReadOptions struct {
+	Properties            []string `url:"properties,omitempty"`
+	PropertiesWithHistory []string `url:"propertiesWithHistory"`
+	Associations          []string `url:"associations,omitempty"`
+	Archived              bool     `url:"archived"`
+	idProperty            string   `url:"idProperty"`
 }
 
 type Pagination struct {
@@ -47,10 +63,12 @@ const (
 )
 
 type SearchOptions struct {
-	FilterGroups []FilterGroups `json:"filterGroups"`
-	Sorts        []string       `json:"sorts"`
-	Query        string         `json:"query"`
-	Properties   []string       `json:"properties"`
+	FilterGroups []FilterGroups `json:"filterGroups,omitempty"`
+	Sorts        []string       `json:"sorts,omitempty"`
+	Query        string         `json:"query,omitempty"`
+	Properties   []string       `json:"properties,omitempty"`
+	Limit        int32          `json:"limit"`
+	After        int32           `json:"after"`
 }
 
 type FilterGroups struct {
@@ -64,8 +82,12 @@ type Filters struct {
 	Operator     FilterOperator        `json:"operator"`
 }
 
+type BatchReadQuery struct {
+	Archived bool `url:"archived,omitempty"`
+}
+
 type BatchInputs struct {
-	Inputs []BatchInput `json:"inputs"`
+	Inputs []BatchInput `json:"inputs,omitempty"`
 }
 
 type BatchInput struct {
