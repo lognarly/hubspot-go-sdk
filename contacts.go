@@ -15,9 +15,9 @@ type Contacts interface {
 	Update(contactId string, options *ContactCreateOrUpdateOptions) (*Contact, error)
 	Archive(contactId string) (error)
 	BatchArchive(contactIds []string) (error)
-	BatchCreate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error)
+	BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchOutput, error)
 	BatchRead(options *ContactBatchReadOptions) (*ContactBatchOutput, error)
-	BatchUpdate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error)
+	BatchUpdate(options *ContactBatchUpdateOptions) (*ContactBatchOutput, error)
 	GdprDelete(options *ContactGdprDeleteOptions) (error)
 	Search(options *ContactSearchOptions) (*ContactSearchResults, error)
 	Merge(options *ContactMergeOptions) (*Contact, error)
@@ -99,8 +99,17 @@ type ContactBatchReadOptions struct {
 	BatchReadOptions
 }
 
-type ContactBatchCreateOrUpdateOptions struct {
+type ContactBatchCreateOptions struct {
 	Inputs []ContactCreateOrUpdateOptions `json:"inputs"`
+}
+
+type ContactBatchUpdateOptions struct {
+	Inputs []ContactBatchUpdateProperties `json:"inputs"`
+}
+
+type ContactBatchUpdateProperties struct {
+	Id         string                          `json:"id"`
+	Properties ContactCreateOrUpdateProperties `json:"properties"`
 }
 
 type ContactGdprDeleteOptions struct {
@@ -262,7 +271,7 @@ func (z *contacts) BatchArchive(contactIds []string) (error) {
 	return z.client.do(req, nil)
 }
 
-func (z *contacts) BatchCreate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error) {
+func (z *contacts) BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
@@ -296,7 +305,7 @@ func (z *contacts) BatchRead(options *ContactBatchReadOptions) (*ContactBatchOut
 	return contacts, nil
 }
 
-func (z *contacts) BatchUpdate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error) {
+func (z *contacts) BatchUpdate(options *ContactBatchUpdateOptions) (*ContactBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/update")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {

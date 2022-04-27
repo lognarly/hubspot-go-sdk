@@ -15,9 +15,9 @@ type Companies interface {
 	Update(options *CompanyCreateOrUpdateOptions, companyId string) (*Company, error)
 	Archive(companyId string) (error)
 	BatchArchive(companyIds []string) (error)
-	BatchCreate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchOutput, error)
+	BatchCreate(options *CompanyBatchCreateOptions) (*CompanyBatchOutput, error)
 	BatchRead(options *CompanyBatchReadOptions) (*CompanyBatchOutput, error)
-	BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchOutput, error)
+	BatchUpdate(options *CompanyBatchUpdateOptions) (*CompanyBatchOutput, error)
 	Search(options *CompanySearchOptions) (*CompanySearchResults, error)
 	Merge(options *CompanyMergeOptions) (*Company, error)
 }
@@ -102,12 +102,16 @@ type CompanyBatchReadOptions struct {
 	BatchReadOptions
 }
 
-type CompanyBatchCreateOrUpdateOptions struct {
-	Inputs []CompanyBatchCreateOrUpdateProperties `json:"inputs"`
+type CompanyBatchCreateOptions struct {
+	Inputs []CompanyCreateOrUpdateOptions `json:"inputs"`
 }
 
-type CompanyBatchCreateOrUpdateProperties struct {
-	ID string `json:"id"`
+type CompanyBatchUpdateOptions struct {
+	Inputs []CompanyBatchUpdateProperties `json:"inputs"`
+}
+
+type CompanyBatchUpdateProperties struct {
+	Id         string                          `json:"id"`
 	Properties CompanyCreateOrUpdateProperties `json:"properties"`
 }
 
@@ -116,8 +120,8 @@ type CompanySearchOptions struct {
 }
 
 type CompanySearchResults struct {
-	Total      int64 `json:"total"`
-	Results    []Company
+	Total      int64     `json:"total"`
+	Results    []Company `json:"results"`
 	Pagination
 }
 
@@ -265,7 +269,7 @@ func (z *companies) BatchArchive(companyIds []string) (error) {
 	return z.client.do(req, nil)
 }
 
-func (z *companies) BatchCreate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchOutput, error) {
+func (z *companies) BatchCreate(options *CompanyBatchCreateOptions) (*CompanyBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
@@ -299,7 +303,7 @@ func (z *companies) BatchRead(options *CompanyBatchReadOptions) (*CompanyBatchOu
 	return companies, nil
 }
 
-func (z *companies) BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchOutput, error) {
+func (z *companies) BatchUpdate(options *CompanyBatchUpdateOptions) (*CompanyBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/batch/update")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
