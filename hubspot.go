@@ -68,7 +68,7 @@ type SearchOptions struct {
 	Query        string         `json:"query,omitempty"`
 	Properties   []string       `json:"properties,omitempty"`
 	Limit        int32          `json:"limit"`
-	After        int32           `json:"after"`
+	After        int32          `json:"after"`
 }
 
 type FilterGroups struct {
