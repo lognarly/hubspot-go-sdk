@@ -2,24 +2,42 @@ package main
 
 import (
     "fmt"
+	"strconv"
 )
 
 type Tickets interface {
+	ListAssociations(query *TicketAssociationsQuery, ticketId string, toObjectType string) (*TicketAssociations, error)
+	Associate(ticketId string, toObjectType string, toObjectId int64, associationType string) (*Ticket, error)
+	Disassociate(ticketId string, toObjectType string, toObjectId int64, associationType string) (error)
 	List(query *TicketsListQuery) (*TicketList, error)
 	Create(options *TicketCreateOrUpdateOptions) (*Ticket, error)
 	Read(ticketId string, query *TicketReadQuery) (*Ticket, error)
 	Update(ticketId string, options *TicketCreateOrUpdateOptions) (*Ticket, error)
 	Archive(ticketId string) (error)
 	BatchArchive(ticketIds []string) (error)
-	BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchResults, error)
-	BatchRead(options *TicketBatchReadOptions) (*TicketBatchResults, error)
-	BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchResults, error)
+	BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchOutput, error)
+	BatchRead(options *TicketBatchReadOptions) (*TicketBatchOutput, error)
+	BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchOutput, error)
 	Search(options *TicketSearchOptions) (*TicketSearchResults, error)
 	Merge(options *MergeOptions) (*Ticket, error)
 }
 
 type tickets struct {
 	client *Client
+}
+
+type TicketAssociationsQuery struct {
+	ListAssociationsQuery
+}
+
+type TicketAssociations struct {
+	Results    []TicketAssociation `json:"results"`
+	Pagination
+}
+
+type TicketAssociation struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
 }
 
 type TicketsListQuery struct {
@@ -59,18 +77,10 @@ type TicketCreateOrUpdateProperties struct {
 }
 
 type TicketReadQuery struct {
-	Properties            []string `url:"properties,omitempty"`
-	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
-	Associations          []string `url:"associations,omitempty"`
-	Archived              bool     `url:"archived,omitempty"`
-	idProperty            string   `url:"idProperty,omitempty"`
+	ReadQuery
 }
 
-type TicketBatchCreateOptions struct {
-	Inputs []TicketCreateOrUpdateOptions `json:"inputs"`
-}
-
-type TicketBatchResults struct {
+type TicketBatchOutput struct {
 	Status      string `json:"status"`
 	Results     []Ticket `json:"results"`
 	RequestedAt string `json:"requestedAt"`
@@ -82,8 +92,17 @@ type TicketBatchReadOptions struct {
 	BatchReadOptions
 }
 
+type TicketBatchCreateOptions struct {
+	Inputs []TicketCreateOrUpdateOptions `json:"inputs"`
+}
+
 type TicketBatchUpdateOptions struct {
-	Inputs []Ticket `json:"inputs"`
+	Inputs []TicketBatchUpdateProperties `json:"inputs"`
+}
+
+type TicketBatchUpdateProperties struct {
+	Id         string                       `json:"id"`
+	Properties TicketCreateOrUpdateProperties `json:"properties"`
 }
 
 type TicketSearchOptions struct {
@@ -93,6 +112,54 @@ type TicketSearchOptions struct {
 type TicketSearchResults struct {
 	Total   int64    `json:"total"`
 	Results []Ticket `json:"results"`
+}
+
+type TicketMergeOptions struct {
+	MergeOptions
+}
+
+func (z *tickets) ListAssociations(query *TicketAssociationsQuery, ticketId string, toObjectType string) (*TicketAssociations, error) {
+	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s", ticketId, toObjectType)
+	req, err := z.client.newHttpRequest("GET", u, query)
+	if err != nil {
+		return nil, fmt.Errorf("client.tickets.ListAssociations(): newHttpRequest(): %v", err)
+	}
+
+	ta := &TicketAssociations{}
+
+	err = z.client.do(req, ta)
+	if err != nil {
+		return nil, fmt.Errorf("client.tickets.ListAssociations(): do(): %v", err)
+	}
+	
+	return ta, nil
+}
+
+func (z *tickets) Associate(ticketId string, toObjectType string, toObjectId int64, associationType string) (*Ticket, error) {
+	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("PUT", u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("client.tickets.Associate(): newHttpRequest(): %v", err)
+	}
+
+	ticket := &Ticket{}
+
+	err = z.client.do(req, ticket)
+	if err != nil {
+		return nil, fmt.Errorf("client.tickets.Associate(): do(): %v", err)
+	}
+	
+	return ticket, nil
+}
+
+func (z *tickets) Disassociate(ticketId string, toObjectType string, toObjectId int64, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
+	if err != nil {
+		return fmt.Errorf("client.tickets.Disassociate(): newHttpRequest(): %v", err)
+	}
+
+	return z.client.do(req, nil)
 }
 
 func (z *tickets) List(query *TicketsListQuery) (*TicketList, error) {
@@ -191,14 +258,14 @@ func (z *tickets) BatchArchive(ticketIds []string) (error) {
 	return z.client.do(req, nil)
 }
 
-func (z *tickets) BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchResults, error) {
+func (z *tickets) BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/tickets/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.ticket.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
-	tbr := &TicketBatchResults{}
+	tbr := &TicketBatchOutput{}
 
 	err = z.client.do(req, tbr)
 	if err != nil {
@@ -208,14 +275,14 @@ func (z *tickets) BatchCreate(options *TicketBatchCreateOptions) (*TicketBatchRe
 	return tbr, nil
 }
 
-func (z *tickets) BatchRead(options *TicketBatchReadOptions) (*TicketBatchResults, error) {
+func (z *tickets) BatchRead(options *TicketBatchReadOptions) (*TicketBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/tickets/batch/read")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.ticket.BatchRead(): newHttpRequest(): %v", err)
 	}
 
-	tbr := &TicketBatchResults{}
+	tbr := &TicketBatchOutput{}
 
 	err = z.client.do(req, tbr)
 	if err != nil {
@@ -225,14 +292,14 @@ func (z *tickets) BatchRead(options *TicketBatchReadOptions) (*TicketBatchResult
 	return tbr, nil
 }
 
-func (z *tickets) BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchResults, error) {
+func (z *tickets) BatchUpdate(options *TicketBatchUpdateOptions) (*TicketBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/tickets/batch/update")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.ticket.BatchUpdate(): newHttpRequest(): %v", err)
 	}
 
-	tbr := &TicketBatchResults{}
+	tbr := &TicketBatchOutput{}
 
 	err = z.client.do(req, tbr)
 	if err != nil {
