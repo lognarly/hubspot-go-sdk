@@ -342,12 +342,12 @@ func (z *deals) Merge(options *DealMergeOptions) (*Deal, error) {
 		return nil, fmt.Errorf("client.deals.Merge(): newHttpRequest(): %v", err)
 	}
 
-	company := &Deal{}
+	deal := &Deal{}
 
-	err = z.client.do(req, company)
+	err = z.client.do(req, deal)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.Merge(): do(): %+v", err)
 	}
 
-	return company, nil
+	return deal, nil
 }
