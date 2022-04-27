@@ -5,46 +5,46 @@ import (
 )
 
 type Quotes interface {
-	ListAssociations(quoteId string, toObjectType string, query *QuotesListAssociationsQuery) (*QuotesAssociationsList, error)
-	List(query *QuotesListQuery) (*QuotesList, error)
-	Read(quoteId string, query *QuotesReadQuery) (*Quote, error)
-	BatchRead(options *QuotesBatchReadOptions) (*QuotesBatchReadResults, error)
-	Search(options *QuotesSearchOptions) (*QuotesSearchResults, error)
+	ListAssociations(quoteId string, toObjectType string, query *QuoteListAssociationsQuery) (*QuoteAssociationsList, error)
+	List(query *QuoteListQuery) (*QuoteList, error)
+	Read(quoteId string, query *QuoteReadQuery) (*Quote, error)
+	BatchRead(options *QuoteBatchReadOptions) (*QuoteBatchReadResults, error)
+	Search(options *QuoteSearchOptions) (*QuoteSearchResults, error)
 }
 
 type quotes struct {
 	client *Client
 }
 
-type QuotesListAssociationsQuery struct {
+type QuoteListAssociationsQuery struct {
 	ListAssociationsQuery
 }
 
-type QuotesAssociationsList struct {
-	Results []QuotesAssociations `json:"results"`
+type QuoteAssociationsList struct {
+	Results []QuoteAssociations `json:"results"`
 	Pagination
 }
 
-type QuotesAssociations struct {
+type QuoteAssociations struct {
 	Id   string `json:"id"`
 	Type string `json:"type"`
 }
 
-type QuotesListQuery struct {
+type QuoteListQuery struct {
 	ListQuery
 }
 
-type QuotesList struct {
+type QuoteList struct {
 	Results []Quote `json:"results"`
 	Pagination
 }
 
 type Quote struct {
 	Id         string               `json:"id,omitempty"`
-	Properties QuotesListProperties `json:"properties"`
+	Properties QuoteListProperties `json:"properties"`
 }
 
-type QuotesListProperties struct {
+type QuoteListProperties struct {
 	HSCreateDate     string `json:"hs_createdate"`
 	HSExpirationDate string `json:"hs_expiration_date"`
 	HSQuoteAmount    string `json:"hs_quote_amount"`
@@ -55,15 +55,15 @@ type QuotesListProperties struct {
 	HubSpotOwnerId   string `json:"hubspot_owner_id"`
 }
 
-type QuotesReadQuery struct {
+type QuoteReadQuery struct {
 	ReadQuery
 }
 
-type QuotesBatchReadOptions struct {
+type QuoteBatchReadOptions struct {
 	BatchReadOptions
 }
 
-type QuotesBatchReadResults struct {
+type QuoteBatchReadResults struct {
 	Status      string  `json:"status"`
 	Results     []Quote `json:"results"`
 	RequestedAt string  `json:"requestedAt"`
@@ -71,24 +71,24 @@ type QuotesBatchReadResults struct {
 	CompletedAt string  `json:"completedAt"`
 }
 
-type QuotesSearchOptions struct {
+type QuoteSearchOptions struct {
 	SearchOptions
 }
 
-type QuotesSearchResults struct {
+type QuoteSearchResults struct {
 	Total      int32   `json:"total"`
 	Results    []Quote `json:"results"`
 	Pagination
 }
 
-func (z *quotes) ListAssociations(quoteId string, toObjectType string, query *QuotesListAssociationsQuery) (*QuotesAssociationsList, error) {
+func (z *quotes) ListAssociations(quoteId string, toObjectType string, query *QuoteListAssociationsQuery) (*QuoteAssociationsList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes/%s/associations/%s", quoteId, toObjectType)
 	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.quotes.ListAssociations(): newHttpRequest(): %v", err)
 	}
 
-	qal := &QuotesAssociationsList{}
+	qal := &QuoteAssociationsList{}
 
 	err = z.client.do(req, qal)
 	if err != nil {
@@ -98,14 +98,14 @@ func (z *quotes) ListAssociations(quoteId string, toObjectType string, query *Qu
 	return qal, nil
 }
 
-func (z *quotes) List(query *QuotesListQuery) (*QuotesList, error) {
+func (z *quotes) List(query *QuoteListQuery) (*QuoteList, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes")
 	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.quotes.List(): newHttpRequest(): %v", err)
 	}
 
-	ql := &QuotesList{}
+	ql := &QuoteList{}
 
 	err = z.client.do(req, ql)
 	if err != nil {
@@ -115,7 +115,7 @@ func (z *quotes) List(query *QuotesListQuery) (*QuotesList, error) {
 	return ql, nil
 }
 
-func (z *quotes) Read(quoteId string, query *QuotesReadQuery) (*Quote, error) {
+func (z *quotes) Read(quoteId string, query *QuoteReadQuery) (*Quote, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes/%s", quoteId)
 	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
@@ -132,14 +132,14 @@ func (z *quotes) Read(quoteId string, query *QuotesReadQuery) (*Quote, error) {
 	return q, nil
 }
 
-func (z *quotes) BatchRead(options *QuotesBatchReadOptions) (*QuotesBatchReadResults, error) {
+func (z *quotes) BatchRead(options *QuoteBatchReadOptions) (*QuoteBatchReadResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes/batch/read")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.quotes.BatchRead(): newHttpRequest(): %v", err)
 	}
 
-	qbrr := &QuotesBatchReadResults{}
+	qbrr := &QuoteBatchReadResults{}
 
 	err = z.client.do(req, qbrr)
 	if err != nil {
@@ -149,14 +149,14 @@ func (z *quotes) BatchRead(options *QuotesBatchReadOptions) (*QuotesBatchReadRes
 	return qbrr, nil
 }
 
-func (z *quotes) Search(options *QuotesSearchOptions) (*QuotesSearchResults, error) {
+func (z *quotes) Search(options *QuoteSearchOptions) (*QuoteSearchResults, error) {
 	u := fmt.Sprintf("/crm/v3/objects/quotes/search")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.quotes.Search(): newHttpRequest(): %v", err)
 	}
 
-	qsr := &QuotesSearchResults{}
+	qsr := &QuoteSearchResults{}
 
 	err = z.client.do(req, qsr)
 	if err != nil {
