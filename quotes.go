@@ -40,11 +40,11 @@ type QuoteList struct {
 }
 
 type Quote struct {
-	Id         string               `json:"id,omitempty"`
-	Properties QuoteListProperties `json:"properties"`
+	Id         string          `json:"id,omitempty"`
+	Properties QuoteProperties `json:"properties"`
 }
 
-type QuoteListProperties struct {
+type QuoteProperties struct {
 	HSCreateDate     string `json:"hs_createdate"`
 	HSExpirationDate string `json:"hs_expiration_date"`
 	HSQuoteAmount    string `json:"hs_quote_amount"`
