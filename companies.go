@@ -19,7 +19,7 @@ type Companies interface {
 	BatchRead(options *CompanyBatchReadOptions) (*CompanyBatchOutput, error)
 	BatchUpdate(options *CompanyBatchCreateOrUpdateOptions) (*CompanyBatchOutput, error)
 	Search(options *CompanySearchOptions) (*CompanySearchResults, error)
-	Merge(options *MergeOptions) (*Company, error)
+	Merge(options *CompanyMergeOptions) (*Company, error)
 }
 
 type companies struct {
@@ -93,9 +93,9 @@ type CompanyUpdateQuery struct {
 type CompanyBatchOutput struct {
 	Status      string    `json:"status"`
 	Results     []Company `json:"results"`
-	RequestedAt string `json:"requestedAt"`
-	StartedAt   string `json:"startedAt"`
-	CompletedAt string `json:"completedAt"`
+	RequestedAt string    `json:"requestedAt"`
+	StartedAt   string    `json:"startedAt"`
+	CompletedAt string    `json:"completedAt"`
 }
 
 type CompanyBatchReadOptions struct {
@@ -116,8 +116,13 @@ type CompanySearchOptions struct {
 }
 
 type CompanySearchResults struct {
-	Total   int64 `json:"total"`
-	Results []Company
+	Total      int64 `json:"total"`
+	Results    []Company
+	Pagination
+}
+
+type CompanyMergeOptions struct {
+	MergeOptions
 }
 
 func (z *companies) ListAssociations(query *CompanyAssociationsQuery, companyId string, toObjectType string) (*CompanyAssociations, error) {
@@ -328,7 +333,7 @@ func (z *companies) Search(options *CompanySearchOptions) (*CompanySearchResults
 	return companies, nil
 }
 
-func (z *companies) Merge(options *MergeOptions) (*Company, error) {
+func (z *companies) Merge(options *CompanyMergeOptions) (*Company, error) {
 	u := fmt.Sprintf("/crm/v3/objects/companies/merge")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {

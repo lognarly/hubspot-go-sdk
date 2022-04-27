@@ -15,7 +15,12 @@ type Contacts interface {
 	Update(contactId string, options *ContactCreateOrUpdateOptions) (*Contact, error)
 	Archive(contactId string) (error)
 	BatchArchive(contactIds []string) (error)
-	BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchCreateOutput, error)
+	BatchCreate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error)
+	BatchRead(options *ContactBatchReadOptions) (*ContactBatchOutput, error)
+	BatchUpdate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error)
+	GdprDelete(options *ContactGdprDeleteOptions) (error)
+	Search(options *ContactSearchOptions) (*ContactSearchResults, error)
+	Merge(options *ContactMergeOptions) (*Contact, error)
 }
 
 type contacts struct {
@@ -82,13 +87,39 @@ type ContactReadQuery struct {
 	ReadQuery
 }
 
-type ContactBatchCreateOutput struct {
-	Status  string    `json:"status"`
-	Results []Contact `json:"results"`
+type ContactBatchOutput struct {
+	Status      string    `json:"status"`
+	Results     []Contact `json:"results"`
+	RequestedAt string    `json:"requestedAt"`
+	StartedAt   string    `json:"startedAt"`
+	CompletedAt string    `json:"completedAt"`
 }
 
-type ContactBatchCreateOptions struct {
+type ContactBatchReadOptions struct {
+	BatchReadOptions
+}
+
+type ContactBatchCreateOrUpdateOptions struct {
 	Inputs []ContactCreateOrUpdateOptions `json:"inputs"`
+}
+
+type ContactGdprDeleteOptions struct {
+	ObjectId   string `json:"objectId"`
+	IdProperty string `json:"idProperty"`
+}
+
+type ContactSearchOptions struct {
+	SearchOptions
+}
+
+type ContactSearchResults struct {
+	Total      int64 `json:"total"`
+	Results    []Contact
+	Pagination
+}
+
+type ContactMergeOptions struct {
+	MergeOptions
 }
 
 func (z *contacts) ListAssociations(query *ContactAssociationsQuery, contactId string, toObjectType string) (*ContactAssociations, error) {
@@ -231,14 +262,14 @@ func (z *contacts) BatchArchive(contactIds []string) (error) {
 	return z.client.do(req, nil)
 }
 
-func (z *contacts) BatchCreate(options *ContactBatchCreateOptions) (*ContactBatchCreateOutput, error) {
+func (z *contacts) BatchCreate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.contacts.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
-	contacts := &ContactBatchCreateOutput{}
+	contacts := &ContactBatchOutput{}
 
 	err = z.client.do(req, contacts)
 	if err != nil {
@@ -246,4 +277,82 @@ func (z *contacts) BatchCreate(options *ContactBatchCreateOptions) (*ContactBatc
 	}
 
 	return contacts, nil
+}
+
+func (z *contacts) BatchRead(options *ContactBatchReadOptions) (*ContactBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/read")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	contacts := &ContactBatchOutput{}
+
+	err = z.client.do(req, contacts)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.BatchUpdate(): do(): %+v", err)
+	}
+
+	return contacts, nil
+}
+
+func (z *contacts) BatchUpdate(options *ContactBatchCreateOrUpdateOptions) (*ContactBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/contacts/batch/update")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	contacts := &ContactBatchOutput{}
+
+	err = z.client.do(req, contacts)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.BatchUpdate(): do(): %+v", err)
+	}
+
+	return contacts, nil
+}
+
+func (z *contacts) GdprDelete(options *ContactGdprDeleteOptions) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/contacts/gdpr-delete")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return fmt.Errorf("client.contacts.GdprDelete(): newHttpRequest(): %v", err)
+	}
+
+	return z.client.do(req, nil)
+}
+
+func (z *contacts) Search(options *ContactSearchOptions) (*ContactSearchResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/contacts/search")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.Search(): newHttpRequest(): %v", err)
+	}
+
+	contacts := &ContactSearchResults{}
+
+	err = z.client.do(req, contacts)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.Search(): do(): %+v", err)
+	}
+
+	return contacts, nil
+}
+
+func (z *contacts) Merge(options *ContactMergeOptions) (*Contact, error) {
+	u := fmt.Sprintf("/crm/v3/objects/contacts/merge")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.Merge(): newHttpRequest(): %v", err)
+	}
+
+	company := &Contact{}
+
+	err = z.client.do(req, company)
+	if err != nil {
+		return nil, fmt.Errorf("client.contacts.Merge(): do(): %+v", err)
+	}
+
+	return company, nil
 }
