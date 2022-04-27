@@ -193,12 +193,12 @@ func (z *emails) List(query *EmailListQuery) (*EmailList, error) {
 
 	el := &EmailList{}
 
-	err = z.client.do(req, cl)
+	err = z.client.do(req, el)
 	if err != nil {
 		return nil, fmt.Errorf("client.emails.List(): do(): %v", err)
 	}
 	
-	return cl, nil
+	return el, nil
 }
 
 func (z *emails) Create(options *EmailCreateOrUpdateOptions) (*Email, error) {

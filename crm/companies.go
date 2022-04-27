@@ -50,7 +50,7 @@ type CompanyList struct {
 }
 
 type Company struct {
-	ID         string            `json:"id"`
+	Id         string            `json:"id"`
 	Properties CompanyProperties `json:"properties"`
 	CreatedAt  string            `json:"createdAt"`
 	UpdatedAt  string            `json:"updatedAt"`
@@ -58,15 +58,15 @@ type Company struct {
 }
 
 type CompanyProperties struct {
-	City             string `json:"city"`
-	CreateDate       string `json:"createdate"`
-	Domain           string `json:"domain"`
-	HSObjectID       string `json:"hs_object_id"`
-	LastModifiedDate string `json:"hs_lastmodifieddate"`
-	Industry         string `json:"industry"`
-	Name             string `json:"name"`
-	Phone            string `json:"phone"`
-	State            string `json:"state"`
+	City               string `json:"city"`
+	CreateDate         string `json:"createdate"`
+	Domain             string `json:"domain"`
+	HsObjectId         string `json:"hs_object_id"`
+	HsLastModifiedDate string `json:"hs_lastmodifieddate"`
+	Industry           string `json:"industry"`
+	Name               string `json:"name"`
+	Phone              string `json:"phone"`
+	State              string `json:"state"`
 }
 
 type CompanyCreateOrUpdateOptions struct {
