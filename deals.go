@@ -31,7 +31,7 @@ type DealAssociationsQuery struct {
 }
 
 type DealAssociations struct {
-	Results []DealAssociation `json:"results"`
+	Results    []DealAssociation `json:"results"`
 	Pagination
 }
 

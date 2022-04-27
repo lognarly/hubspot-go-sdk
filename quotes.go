@@ -59,10 +59,6 @@ type QuotesReadQuery struct {
 	ReadQuery
 }
 
-type QuotesBatchReadQuery struct {
-	BatchReadQuery
-}
-
 type QuotesBatchReadOptions struct {
 	BatchReadOptions
 }
@@ -80,8 +76,9 @@ type QuotesSearchOptions struct {
 }
 
 type QuotesSearchResults struct {
-	Total   int32 `json:"total"`
-	Results []Quote `json:"results"`
+	Total      int32   `json:"total"`
+	Results    []Quote `json:"results"`
+	Pagination
 }
 
 func (z *quotes) ListAssociations(quoteId string, toObjectType string, query *QuotesListAssociationsQuery) (*QuotesAssociationsList, error) {
