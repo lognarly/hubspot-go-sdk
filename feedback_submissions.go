@@ -21,7 +21,7 @@ type FeedbackSubmissionListAssociationQuery struct {
 }
 
 type FeedbackSubmissionAssociations struct {
-	Results []FeedbackSubmissionAssociation `json:"results"`
+	Results    []FeedbackSubmissionAssociation `json:"results"`
 	Pagination
 }
 

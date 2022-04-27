@@ -8,7 +8,7 @@ import (
 type Deals interface {
 	ListAssociations(query *DealAssociationsQuery, dealId string, toObjectType string) (*DealAssociations, error)
 	Associate(dealId string, toObjectType string, toObjectId int64, associationType string) (*Deal, error)
-	Disassociate(contactId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Disassociate(dealId string, toObjectType string, toObjectId int64, associationType string) (error)
 	List(query *DealListQuery) (*DealList, error)
 	Create(options *DealCreateOrUpdateOptions) (*Deal, error)
 	Read(query *DealReadQuery, dealId string) (*Deal, error)
@@ -115,8 +115,8 @@ type DealSearchOptions struct {
 }
 
 type DealSearchResults struct {
-	Total   int64 `json:"total"`
-	Results []Deal `json:"results"`
+	Total      int64 `json:"total"`
+	Results    []Deal `json:"results"`
 	Pagination
 }
 
@@ -158,8 +158,8 @@ func (z *deals) Associate(dealId string, toObjectType string, toObjectId int64, 
 	return deal, nil
 }
 
-func (z *deals) Disassociate(contactId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/deals/%s/associations/%s/%s/%s", contactId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *deals) Disassociate(dealId string, toObjectType string, toObjectId int64, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/deals/%s/associations/%s/%s/%s", dealId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.deals.Disassociate(): newHttpRequest(): %v", err)

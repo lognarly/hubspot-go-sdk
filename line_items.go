@@ -2,35 +2,55 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type LineItems interface {
+	ListAssociations(query *LineItemAssociationsQuery, lineItem string, toObjectType string) (*LineItemAssociations, error)
+	Associate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (*LineItem, error)
+	Disassociate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (error)
 	List(query *LineItemListQuery) (*LineItemList, error)
-	Create(options *LineItemCreateOptions) (*LineItem, error)
-	Read(lineItemId string) (*LineItem, error)
-	Update(lineItemId string, options *LineItemUpdateOptions) (*LineItem, error)
+	Create(options *LineItemCreateOrUpdateOptions) (*LineItem, error)
+	Read(query *LineItemReadQuery, lineItemId string) (*LineItem, error)
+	Update(lineItemId string, options *LineItemCreateOrUpdateOptions) (*LineItem, error)
 	Archive(lineItemId string) (error)
 	BatchArchive(lineItemIds []string) (error)
-	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateResults, error)
+	BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchOutput, error)
+	BatchRead(options *LineItemBatchReadOptions) (*LineItemBatchOutput, error)
+	BatchUpdate(options *LineItemBatchUpdateOptions) (*LineItemBatchOutput, error)
+	Search(options *LineItemSearchOptions) (*LineItemSearchResults, error)
+	Merge(options *LineItemMergeOptions) (*LineItem, error)
 }
 
 type lineItems struct {
 	client *Client
 }
 
-type LineItemQuery string
+type LineItemAssociationsQuery struct {
+	ListAssociationsQuery
+}
+
+type LineItemAssociations struct {
+	Results    []LineItemAssociation `json:"results"`
+	Pagination
+}
+
+type LineItemAssociation struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
+}
 
 type LineItemListQuery struct {
 	ListQuery
 }
 
 type LineItemList struct {
-	LineItems      []LineItem `json:"results"`
+	LineItems  []LineItem `json:"results"`
 	Pagination
 }
 
 type LineItem struct {
-	ID         string             `json:"id"`
+	Id         string             `json:"id"`
 	Properties LineItemProperties `json:"properties"`
 	CreatedAt  string             `json:"createdAt"`
 	UpdatedAt  string             `json:"updatedAt"`
@@ -38,16 +58,16 @@ type LineItem struct {
 }
 
 type LineItemProperties struct {
-	CreateDate       string `json:"createdate"`
-	Description      string `json:"description"`
-	LastModifiedDate string `json:"hs_lastmodifieddate"`
-	HSObjectID       string `json:"hs_object_id"`
-	Name             string `json:"name"`
-	Price            string `json:"price"`
-	SKU              string `json:"hs_sku"`
+	CreateDate         string `json:"createdate"`
+	Description        string `json:"description"`
+	HSLastModifiedDate string `json:"hs_lastmodifieddate"`
+	HSObjectID         string `json:"hs_object_id"`
+	Name               string `json:"name"`
+	Price              string `json:"price"`
+	SKU                string `json:"hs_sku"`
 }
 
-type LineItemCreateOptions struct {
+type LineItemCreateOrUpdateOptions struct {
 	Properties LineItemCreateOrUpdateProperties `json:"properties"`
 }
 
@@ -58,33 +78,95 @@ type LineItemCreateOrUpdateProperties struct {
 	SKU              string `json:"hs_sku"`
 }
 
-type LineItemUpdateOptions struct {
-	Properties LineItemCreateOrUpdateProperties `json:"properties"`
+type LineItemReadQuery struct {
+	ReadQuery
 }
 
-type LineItemBatchCreateOptions struct {
-	Inputs []LineItemCreateOptions `json:"inputs"`
-}
-
-type LineItemBatchCreateResults struct {
-	Status  string    `json:"status"`
-	Results []LineItem `json:"results"`
+type LineItemBatchOutput struct {
+	Status      string `json:"status"`
+	Results     []LineItem `json:"results"`
+	RequestedAt string `json:"requestedAt"`
+	StartedAt   string `json:"startedAt"`
+	CompletedAt string `json:"completedAt"`
 }
 
 type LineItemBatchReadOptions struct {
 	BatchReadOptions
 }
 
-type LineItemBatchReadResults struct {
-	Status      string     `json:"status"`
-	Results     []LineItem `json:"results"`
-	RequestedAt string  `json:"requestedAt"`
-	StartedAt   string  `json:"startedAt"`
-	CompletedAt string  `json:"completedAt"`
+type LineItemBatchCreateOptions struct {
+	Inputs []LineItemCreateOrUpdateOptions `json:"inputs"`
+}
+
+type LineItemBatchUpdateOptions struct {
+	Inputs []LineItemBatchUpdateProperties `json:"inputs"`
+}
+
+type LineItemBatchUpdateProperties struct {
+	Id         string                       `json:"id"`
+	Properties LineItemCreateOrUpdateProperties `json:"properties"`
+}
+
+type LineItemSearchOptions struct {
+	SearchOptions
+}
+
+type LineItemSearchResults struct {
+	Total      int64       `json:"total"`
+	Results    []LineItem `json:"results"`
+	Pagination
+}
+
+type LineItemMergeOptions struct {
+	MergeOptions
+}
+
+func (z *lineItems) ListAssociations(query *LineItemAssociationsQuery, lineItemId string, toObjectType string) (*LineItemAssociations, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/%s/associations/%s", lineItemId, toObjectType)
+	req, err := z.client.newHttpRequest("GET", u, query)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.ListAssociations(): newHttpRequest(): %v", err)
+	}
+
+	la := &LineItemAssociations{}
+
+	err = z.client.do(req, la)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.ListAssociations(): do(): %v", err)
+	}
+	
+	return la, nil
+}
+
+func (z *lineItems) Associate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (*LineItem, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/%s/associations/%s/%s/%s", lineItemId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("PUT", u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Associate(): newHttpRequest(): %v", err)
+	}
+
+	lineItem := &LineItem{}
+
+	err = z.client.do(req, lineItem)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Associate(): do(): %v", err)
+	}
+	
+	return lineItem, nil
+}
+
+func (z *lineItems) Disassociate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/lineItems/%s/associations/%s/%s/%s", lineItemId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
+	if err != nil {
+		return fmt.Errorf("client.lineItems.Disassociate(): newHttpRequest(): %v", err)
+	}
+
+	return z.client.do(req, nil)
 }
 
 func (l *lineItems) List(query *LineItemListQuery) (*LineItemList, error) {
-	u := fmt.Sprintf("crm/v3/objects/lineitems")
+	u := fmt.Sprintf("crm/v3/objects/line_items")
 	req, err := l.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.List(): newHttpRequest(): %v", err)
@@ -100,8 +182,8 @@ func (l *lineItems) List(query *LineItemListQuery) (*LineItemList, error) {
 	return pl, nil
 }
 
-func (l *lineItems) Create(options *LineItemCreateOptions) (*LineItem, error) {
-	u := fmt.Sprintf("/crm/v3/objects/lineitems")
+func (l *lineItems) Create(options *LineItemCreateOrUpdateOptions) (*LineItem, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items")
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.Create(): newHttpRequest(): %+v", err)
@@ -117,9 +199,9 @@ func (l *lineItems) Create(options *LineItemCreateOptions) (*LineItem, error) {
 	return lineItem, nil
 }
 
-func (l *lineItems) Read(lineItemId string) (*LineItem, error) {
-	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
-	req, err := l.client.newHttpRequest("GET", u, nil)
+func (l *lineItems) Read(query *LineItemReadQuery, lineItemId string) (*LineItem, error) {
+	u := fmt.Sprintf("crm/v3/objects/line_items/%s", lineItemId)
+	req, err := l.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.Read(): newHttpRequest(): %v", err)
 	}
@@ -134,8 +216,8 @@ func (l *lineItems) Read(lineItemId string) (*LineItem, error) {
 	return lineItem, nil
 }
 
-func (l *lineItems) Update(lineItemId string, options *LineItemUpdateOptions) (*LineItem, error) {
-	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
+func (l *lineItems) Update(lineItemId string, options *LineItemCreateOrUpdateOptions) (*LineItem, error) {
+	u := fmt.Sprintf("crm/v3/objects/line_items/%s", lineItemId)
 	req, err := l.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItem.Update(): newHttpRequest(): %v", err)
@@ -152,7 +234,7 @@ func (l *lineItems) Update(lineItemId string, options *LineItemUpdateOptions) (*
 }
 
 func (l *lineItems) Archive(lineItemId string) (error) {
-	u := fmt.Sprintf("crm/v3/objects/lineitems/%s", lineItemId)
+	u := fmt.Sprintf("crm/v3/objects/line_items/%s", lineItemId)
 	req, err := l.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.lineItems.Archive(): newHttpRequest(): %v", err)
@@ -162,7 +244,7 @@ func (l *lineItems) Archive(lineItemId string) (error) {
 }
 
 func (l *lineItems) BatchArchive(lineItemIds []string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/lineitems/batch/archive")
+	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/archive")
 
 	options := BatchInputOptions{}
 	options.Inputs = make([]BatchInput, 0)
@@ -179,14 +261,14 @@ func (l *lineItems) BatchArchive(lineItemIds []string) (error) {
 	return l.client.do(req, nil)
 }
 
-func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchCreateResults, error) {
-	u := fmt.Sprintf("/crm/v3/objects/lineitems/batch/create")
+func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/create")
 	req, err := l.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
-	lineItems := &LineItemBatchCreateResults{}
+	lineItems := &LineItemBatchOutput{}
 
 	err = l.client.do(req, lineItems)
 	if err != nil {
@@ -196,14 +278,14 @@ func (l *lineItems) BatchCreate(options *LineItemBatchCreateOptions) (*LineItemB
 	return lineItems, nil
 }
 
-func (z *lineItems) BatchRead(options *LineItemBatchReadOptions) (*LineItemBatchReadResults, error) {
+func (z *lineItems) BatchRead(options *LineItemBatchReadOptions) (*LineItemBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/read")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.BatchRead(): newHttpRequest(): %v", err)
 	}
 
-	lbrr := &LineItemBatchReadResults{}
+	lbrr := &LineItemBatchOutput{}
 
 	err = z.client.do(req, lbrr)
 	if err != nil {
@@ -211,4 +293,55 @@ func (z *lineItems) BatchRead(options *LineItemBatchReadOptions) (*LineItemBatch
 	}
 
 	return lbrr, nil
+}
+
+func (z *lineItems) BatchUpdate(options *LineItemBatchUpdateOptions) (*LineItemBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/batch/update")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	lineItems := &LineItemBatchOutput{}
+
+	err = z.client.do(req, lineItems)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.BatchUpdate(): do(): %+v", err)
+	}
+
+	return lineItems, nil
+}
+
+func (z *lineItems) Search(options *LineItemSearchOptions) (*LineItemSearchResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/search")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Search(): newHttpRequest(): %v", err)
+	}
+
+	lineItems := &LineItemSearchResults{}
+
+	err = z.client.do(req, lineItems)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Search(): do(): %+v", err)
+	}
+
+	return lineItems, nil
+}
+
+func (z *lineItems) Merge(options *LineItemMergeOptions) (*LineItem, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/merge")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Merge(): newHttpRequest(): %v", err)
+	}
+
+	company := &LineItem{}
+
+	err = z.client.do(req, company)
+	if err != nil {
+		return nil, fmt.Errorf("client.lineItems.Merge(): do(): %+v", err)
+	}
+
+	return company, nil
 }
