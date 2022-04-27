@@ -1,4 +1,4 @@
-package main
+package crm
 
 import (
 	//"encoding/json"
@@ -23,7 +23,7 @@ type ReadQuery struct {
 	PropertiesWithHistory []string `url:"propertiesWithHistory"`
 	Associations          []string `url:"associations,omitempty"`
 	Archived              bool     `url:"archived"`
-	idProperty            string   `url:"idProperty"`
+	IdProperty            string   `url:"idProperty"`
 }
 
 type Pagination struct {
