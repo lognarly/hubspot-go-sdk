@@ -90,14 +90,6 @@ type CompanyUpdateQuery struct {
 	IdProperty string `url:"idProperty"`
 }
 
-type CompanyBatchArchiveOptions struct {
-	Inputs []ArchiveCompany `json:"inputs"`
-}
-
-type ArchiveCompany struct {
-	CompanyId string `json:"id"`
-}
-
 type CompanyBatchOutput struct {
 	Status      string    `json:"status"`
 	Results     []Company `json:"results"`
