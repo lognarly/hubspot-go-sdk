@@ -9,9 +9,10 @@ type Associations interface {
 	List(fromObjectType string, fromObjectId int64, toObjectType string, query *AssociationListQuery) (*AssociationList, error)
 	Create(options *[]AssociationCreateOptions, fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (*AssociationCreateOutput, error)
 	Delete(fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (error)
-	ReadDefinition(query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
-	CreateDefinition(options *AssociationCreateDefinitionOptions, query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
-	UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationDefinitionQuery) (error)
+	ReadDefinition(fromObjectType string, toObjectType string) (*AssociationDefinitionOutput, error)
+	CreateDefinition(options *AssociationCreateDefinitionOptions, fromObjectType string, toObjectType string) (*AssociationDefinitionOutput, error)
+	UpdateDefinition(options *AssociationUpdateDefinitionOptions, fromObjectType string, toObjectType string) (error)
+	DeleteDefinition(fromObjectType string, toObjectType string, typeId int64) (error)
 }
 
 type associations struct {
@@ -59,11 +60,6 @@ type AssociationCreateOutput struct {
 	Labels           []string `json:"labels"`
 }
 
-type AssociationDefinitionQuery struct {
-	FromObjectType string
-	ToObjectType   string
-}
-
 type AssociationDefinitionOutput struct {
 	Results []AssociationDefinition `json:"results"`
 }
@@ -82,12 +78,6 @@ type AssociationCreateDefinitionOptions struct {
 type AssociationUpdateDefinitionOptions struct {
 	Label string `json:"label"`
 	TypeId int64 `json:"associationTypeId"`
-}
-
-type AssocationDeleteDefinitionQuery struct {
-	FromObjectType string 
-	ToObjectType   string 
-	TypeId         int64  
 }
 
 func (a *associations) List(fromObjectType string, fromObjectId int64, toObjectType string, query *AssociationListQuery) (*AssociationList, error) {
@@ -134,8 +124,8 @@ func (a *associations) Delete(fromObjectType string, fromObjectId int64, toObjec
 	return a.client.do(req, nil)
 }
 
-func (a *associations) ReadDefinition(query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error) {
-	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", query.FromObjectType, query.ToObjectType)
+func (a *associations) ReadDefinition(fromObjectType string, toObjectType string) (*AssociationDefinitionOutput, error) {
+	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", fromObjectType, toObjectType)
 	req, err := a.client.newHttpRequest("GET", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.association.ReadDefinition(): newHttpRequest(): %v", err)
@@ -151,8 +141,8 @@ func (a *associations) ReadDefinition(query *AssociationDefinitionQuery) (*Assoc
 	return ard, nil
 }
 
-func (a *associations) CreateDefinition(options *AssociationCreateDefinitionOptions, query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error) {
-	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", query.FromObjectType, query.ToObjectType)
+func (a *associations) CreateDefinition(options *AssociationCreateDefinitionOptions, fromObjectType string, toObjectType string) (*AssociationDefinitionOutput, error) {
+	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", fromObjectType, toObjectType)
 	req, err := a.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.association.CreateDefinition(): newHttpRequest(): %v", err)
@@ -168,8 +158,8 @@ func (a *associations) CreateDefinition(options *AssociationCreateDefinitionOpti
 	return ard, nil
 }
 
-func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationDefinitionQuery) (error) {
-	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", query.FromObjectType, query.ToObjectType)
+func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOptions, fromObjectType string, toObjectType string) (error) {
+	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels", fromObjectType, toObjectType)
 	req, err := a.client.newHttpRequest("PUT", u, options)
 	if err != nil {
 		return fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
@@ -178,9 +168,9 @@ func (a *associations) UpdateDefinition(options *AssociationUpdateDefinitionOpti
 	return a.client.do(req, nil)
 }
 
-func (a *associations) DeleteDefinition(query *AssocationDeleteDefinitionQuery) (error) {
-	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels/%s", query.FromObjectType, query.ToObjectType, strconv.FormatInt(query.TypeId, 10))
-	req, err := a.client.newHttpRequest("PUT", u, query)
+func (a *associations) DeleteDefinition(fromObjectType string, toObjectType string, typeId int64) (error) {
+	u := fmt.Sprintf("/crm/v4/associations/%s/%s/labels/%s", fromObjectType, toObjectType, strconv.FormatInt(typeId, 10))
+	req, err := a.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.association.UpdateDefinition(): newHttpRequest(): %v", err)
 	}
