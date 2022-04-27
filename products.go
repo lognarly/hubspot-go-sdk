@@ -2,23 +2,43 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type Products interface {
+	ListAssociations(query *ProductAssociationsQuery, productId string, toObjectType string) (*ProductAssociations, error)
+	Associate(productId string, toObjectType string, toObjectId int64, associationType string) (*Product, error)
+	Disassociate(productId string, toObjectType string, toObjectId int64, associationType string) (error)
 	List(query *ProductListQuery) (*ProductList, error)
-	Create(options *ProductCreateOptions) (*Product, error)
-	Read(productId string) (*Product, error)
-	Update(productId string, options *ProductUpdateOptions) (*Product, error)
+	Create(options *ProductCreateOrUpdateOptions) (*Product, error)
+	Read(query *ProductReadQuery, productId string) (*Product, error)
+	Update(productId string, options *ProductCreateOrUpdateOptions) (*Product, error)
 	Archive(productId string) (error)
 	BatchArchive(productIds []string) (error)
-	BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchCreateOutput, error)
+	BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchOutput, error)
+	BatchRead(options *ProductBatchReadOptions) (*ProductBatchOutput, error)
+	BatchUpdate(options *ProductBatchUpdateOptions) (*ProductBatchOutput, error)
+	Search(options *ProductSearchOptions) (*ProductSearchResults, error)
+	Merge(options *ProductMergeOptions) (*Product, error)
 }
 
 type products struct {
 	client *Client
 }
 
-type ProductQuery string
+type ProductAssociationsQuery struct {
+	ListAssociationsQuery
+}
+
+type ProductAssociations struct {
+	Results []ProductAssociation `json:"results"`
+	Pagination
+}
+
+type ProductAssociation struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
+}
 
 type ProductListQuery struct {
 	ListQuery
@@ -47,28 +67,102 @@ type ProductProperties struct {
 	SKU              string `json:"hs_sku"`
 }
 
-type ProductCreateOptions struct {
+type ProductCreateOrUpdateOptions struct {
 	Properties ProductCreateOrUpdateProperties `json:"properties"`
 }
 
 type ProductCreateOrUpdateProperties struct {
-	Description      string `json:"description"`
+	Description      string `json:"description,omitempty"`
 	Name             string `json:"name"`
-	Price            string `json:"price"`
-	SKU              string `json:"hs_sku"`
+	Price            string `json:"price,omitempty"`
+	SKU              string `json:"hs_sku,omitempty"`
 }
 
-type ProductUpdateOptions struct {
-	Properties ProductCreateOrUpdateProperties `json:"properties"`
+type ProductReadQuery struct {
+	ReadQuery
+}
+
+type ProductBatchOutput struct {
+	Status      string    `json:"status"`
+	Results     []Product `json:"results"`
+	RequestedAt string    `json:"requestedAt"`
+	StartedAt   string    `json:"startedAt"`
+	CompletedAt string    `json:"completedAt"`
+}
+
+type ProductBatchReadOptions struct {
+	BatchReadOptions
 }
 
 type ProductBatchCreateOptions struct {
-	Inputs []ProductCreateOptions `json:"inputs"`
+	Inputs []ProductCreateOrUpdateOptions `json:"inputs"`
 }
 
-type ProductBatchCreateOutput struct {
-	Status  string    `json:"status"`
-	Results []Product `json:"results"`
+type ProductBatchUpdateOptions struct {
+	Inputs []ProductBatchUpdateProperties `json:"inputs"`
+}
+
+type ProductBatchUpdateProperties struct {
+	Id         string                          `json:"id"`
+	Properties ProductCreateOrUpdateProperties `json:"properties"`
+}
+
+type ProductSearchOptions struct {
+	SearchOptions
+}
+
+type ProductSearchResults struct {
+	Total      int64     `json:"total"`
+	Results    []Product `json:"results"`
+	Pagination
+}
+
+type ProductMergeOptions struct {
+	MergeOptions
+}
+
+func (z *products) ListAssociations(query *ProductAssociationsQuery, productId string, toObjectType string) (*ProductAssociations, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s", productId, toObjectType)
+	req, err := z.client.newHttpRequest("GET", u, query)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.ListAssociations(): newHttpRequest(): %v", err)
+	}
+
+	pa := &ProductAssociations{}
+
+	err = z.client.do(req, pa)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.ListAssociations(): do(): %v", err)
+	}
+	
+	return pa, nil
+}
+
+func (z *products) Associate(productId string, toObjectType string, toObjectId int64, associationType string) (*Product, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("PUT", u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Associate(): newHttpRequest(): %v", err)
+	}
+
+	product := &Product{}
+
+	err = z.client.do(req, product)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Associate(): do(): %v", err)
+	}
+	
+	return product, nil
+}
+
+func (z *products) Disassociate(productId string, toObjectType string, toObjectId int64, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+	req, err := z.client.newHttpRequest("DELETE", u, nil)
+	if err != nil {
+		return fmt.Errorf("client.products.Disassociate(): newHttpRequest(): %v", err)
+	}
+
+	return z.client.do(req, nil)
 }
 
 func (z *products) List(query *ProductListQuery) (*ProductList, error) {
@@ -88,7 +182,7 @@ func (z *products) List(query *ProductListQuery) (*ProductList, error) {
 	return pl, nil
 }
 
-func (z *products) Create(options *ProductCreateOptions) (*Product, error) {
+func (z *products) Create(options *ProductCreateOrUpdateOptions) (*Product, error) {
 	u := fmt.Sprintf("/crm/v3/objects/products")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
@@ -105,9 +199,9 @@ func (z *products) Create(options *ProductCreateOptions) (*Product, error) {
 	return product, nil
 }
 
-func (z *products) Read(productId string) (*Product, error) {
+func (z *products) Read(query *ProductReadQuery, productId string) (*Product, error) {
 	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
-	req, err := z.client.newHttpRequest("GET", u, nil)
+	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.products.Read(): newHttpRequest(): %v", err)
 	}
@@ -122,7 +216,7 @@ func (z *products) Read(productId string) (*Product, error) {
 	return product, nil
 }
 
-func (z *products) Update(productId string, options *ProductUpdateOptions) (*Product, error) {
+func (z *products) Update(productId string, options *ProductCreateOrUpdateOptions) (*Product, error) {
 	u := fmt.Sprintf("crm/v3/objects/products/%s", productId)
 	req, err := z.client.newHttpRequest("PATCH", u, options)
 	if err != nil {
@@ -167,14 +261,14 @@ func (z *products) BatchArchive(productIds []string) (error) {
 	return z.client.do(req, nil)
 }
 
-func (z *products) BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchCreateOutput, error) {
+func (z *products) BatchCreate(options *ProductBatchCreateOptions) (*ProductBatchOutput, error) {
 	u := fmt.Sprintf("/crm/v3/objects/products/batch/create")
 	req, err := z.client.newHttpRequest("POST", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.products.BatchCreate(): newHttpRequest(): %v", err)
 	}
 
-	products := &ProductBatchCreateOutput{}
+	products := &ProductBatchOutput{}
 
 	err = z.client.do(req, products)
 	if err != nil {
@@ -182,4 +276,72 @@ func (z *products) BatchCreate(options *ProductBatchCreateOptions) (*ProductBatc
 	}
 
 	return products, nil
+}
+
+func (z *products) BatchRead(options *ProductBatchReadOptions) (*ProductBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/batch/read")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	products := &ProductBatchOutput{}
+
+	err = z.client.do(req, products)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.BatchUpdate(): do(): %+v", err)
+	}
+
+	return products, nil
+}
+
+func (z *products) BatchUpdate(options *ProductBatchUpdateOptions) (*ProductBatchOutput, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/batch/update")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.BatchUpdate(): newHttpRequest(): %v", err)
+	}
+
+	products := &ProductBatchOutput{}
+
+	err = z.client.do(req, products)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.BatchUpdate(): do(): %+v", err)
+	}
+
+	return products, nil
+}
+
+func (z *products) Search(options *ProductSearchOptions) (*ProductSearchResults, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/search")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Search(): newHttpRequest(): %v", err)
+	}
+
+	products := &ProductSearchResults{}
+
+	err = z.client.do(req, products)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Search(): do(): %+v", err)
+	}
+
+	return products, nil
+}
+
+func (z *products) Merge(options *ProductMergeOptions) (*Product, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/merge")
+	req, err := z.client.newHttpRequest("POST", u, options)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Merge(): newHttpRequest(): %v", err)
+	}
+
+	product := &Product{}
+
+	err = z.client.do(req, product)
+	if err != nil {
+		return nil, fmt.Errorf("client.products.Merge(): do(): %+v", err)
+	}
+
+	return product, nil
 }
