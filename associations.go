@@ -7,8 +7,8 @@ import (
 
 type Associations interface {
 	List(fromObjectType string, fromObjectId int64, toObjectType string, query *AssociationListQuery) (*AssociationList, error)
-	Create(options *[]AssociationCreateOptions, query *AssociationCreateOrDeleteQuery) (*AssociationCreateOutput, error)
-	Delete(query *AssociationCreateOrDeleteQuery) (error)
+	Create(options *[]AssociationCreateOptions, fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (*AssociationCreateOutput, error)
+	Delete(fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (error)
 	ReadDefinition(query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
 	CreateDefinition(options *AssociationCreateDefinitionOptions, query *AssociationDefinitionQuery) (*AssociationDefinitionOutput, error)
 	UpdateDefinition(options *AssociationUpdateDefinitionOptions, query *AssociationDefinitionQuery) (error)
@@ -44,13 +44,6 @@ type AssociationType struct {
 	Category HubspotAssociationCategory `json:"category"`
 	TypeId   int64                      `json:"typeId"`
 	Label    string                     `json:"label"`
-}
-
-type AssociationCreateOrDeleteQuery struct {
-	FromObjectType  string
-	FromObjectId    int64
-	ToObjectType    string
-	ToObjectId      int64
 }
 
 type AssociationCreateOptions struct {
@@ -114,8 +107,8 @@ func (a *associations) List(fromObjectType string, fromObjectId int64, toObjectT
 	return al, nil
 }
 
-func (a *associations) Create(options *[]AssociationCreateOptions, query *AssociationCreateOrDeleteQuery) (*AssociationCreateOutput, error) {
-	u := fmt.Sprintf("/crm/v4/objects/%s/%s/associations/%s/%s", query.FromObjectType, strconv.FormatInt(query.FromObjectId, 10), query.ToObjectType, strconv.FormatInt(query.ToObjectId, 10))
+func (a *associations) Create(options *[]AssociationCreateOptions, fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (*AssociationCreateOutput, error) {
+	u := fmt.Sprintf("/crm/v4/objects/%s/%s/associations/%s/%s", fromObjectType, strconv.FormatInt(fromObjectId, 10), toObjectType, strconv.FormatInt(toObjectId, 10))
 	req, err := a.client.newHttpRequest("PUT", u, options)
 	if err != nil {
 		return nil, fmt.Errorf("client.association.Create(): newHttpRequest(): %v", err)
@@ -131,8 +124,8 @@ func (a *associations) Create(options *[]AssociationCreateOptions, query *Associ
 	return aco, nil
 }
 
-func (a *associations) Delete(query *AssociationCreateOrDeleteQuery) (error) {
-	u := fmt.Sprintf("/crm/v4/objects/%s/%s/associations/%s/%s", query.FromObjectType, strconv.FormatInt(query.FromObjectId, 10), query.ToObjectType, strconv.FormatInt(query.ToObjectId, 10))
+func (a *associations) Delete(fromObjectType string, fromObjectId int64, toObjectType string, toObjectId int64) (error) {
+	u := fmt.Sprintf("/crm/v4/objects/%s/%s/associations/%s/%s", fromObjectType, strconv.FormatInt(fromObjectId, 10), toObjectType, strconv.FormatInt(toObjectId, 10))
 	req, err := a.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.association.Archive(): newHttpRequest(): %v", err)

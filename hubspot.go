@@ -98,6 +98,7 @@ type BatchReadOptions struct {
 	Properties            []string `json:"properties"`
 	PropertiesWithHistory []string `json:"propertiesWithHistory"`
 	IdProperty            string   `json:"idProperty"`
+	BatchInputOptions
 }
 
 type MergeOptions struct {
