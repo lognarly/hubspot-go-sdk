@@ -126,9 +126,13 @@ func (c *Client) do(req *http.Request, v interface{}) (error) {
 	defer res.Body.Close()
 
 	statusOk := res.StatusCode >= 200 && res.StatusCode < 300
-	fmt.Println(res.StatusCode)
+
 	if !statusOk {
-		return fmt.Errorf("client.do(): %+v", err)
+		resBody, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return fmt.Errorf("client.do(): ioutil.Readall(): %v", err)
+		}
+		return fmt.Errorf("client.do(): %s", string(resBody))
 	}
 	
 	resBody, err := ioutil.ReadAll(res.Body)

@@ -40,6 +40,7 @@ type HubSpotError struct {
 	Status        string `json:"status"`
 	Message       string `json:"message"`
 	CorrelationId string `json:"correlationId"`
+	Category      string `json:"category"`
 }
 
 type FilterOperator string
