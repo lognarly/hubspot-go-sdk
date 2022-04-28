@@ -59,19 +59,19 @@ type Email struct {
 
 type EmailProperties struct {
 	CreateDate             string `json:"createdate"`
-	HsEmailDirection       string `json:"hs_email_direction"`
-	HsEmailSenderEmail     string `json:"hs_email_sender_email"`
+	HsEmailDirection       string `json:"hs_email_direction,omitempty"`
+	HsEmailSenderEmail     string `json:"hs_email_sender_email,omitempty"`
 	HsEmailSenderFirstName string `json:"hs_email_sender_firstname"`
-	HsEmailSenderLastName  string `json:"hs_email_sender_lastname"`
-	HsEmailStatus          string `json:"hs_email_status"`
-	HsEmailSubject         string `json:"hs_email_subject"`
-	HsEmailText            string `json:"hs_email_text"`
-	HsEmailToEmail         string `json:"hs_email_to_email"`
-	HsEmailToFirstName     string `json:"hs_email_to_firstname"`
-	HsEmailToLastName      string `json:"hs_email_to_lastname"`
-	HsLastModifiedDate     string `json:"hs_lastmodifieddate"`
-	HsTimestamp            string `json:"hs_timestamp"`
-	HubSpotOwnerId         string `json:"hubspot_owner_id"`
+	HsEmailSenderLastName  string `json:"hs_email_sender_lastname,omitempty"`
+	HsEmailStatus          string `json:"hs_email_status,omitempty"`
+	HsEmailSubject         string `json:"hs_email_subject,omitempty"`
+	HsEmailText            string `json:"hs_email_text,omitempty"`
+	HsEmailToEmail         string `json:"hs_email_to_email,omitempty"`
+	HsEmailToFirstName     string `json:"hs_email_to_firstname,omitempty"`
+	HsEmailToLastName      string `json:"hs_email_to_lastname,omitempty"`
+	HsLastModifiedDate     string `json:"hs_lastmodifieddate,omitempty"`
+	HsTimestamp            string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId         string `json:"hubspot_owner_id,omitempty"`
 }
 
 type EmailCreateOrUpdateOptions struct {
@@ -79,18 +79,18 @@ type EmailCreateOrUpdateOptions struct {
 }
 
 type EmailCreateOrUpdateProperties struct {
-	HsEmailDirection       string `json:"hs_email_direction"`
-	HsEmailSenderEmail     string `json:"hs_email_sender_email"`
-	HsEmailSenderFirstName string `json:"hs_email_sender_firstname"`
-	HsEmailSenderLastName  string `json:"hs_email_sender_lastname"`
-	HsEmailStatus          string `json:"hs_email_status"`
-	HsEmailSubject         string `json:"hs_email_subject"`
-	HsEmailText            string `json:"hs_email_text"`
-	HsEmailToEmail         string `json:"hs_email_to_email"`
-	HsEmailToFirstName     string `json:"hs_email_to_firstname"`
-	HsEmailToLastName      string `json:"hs_email_to_lastname"`
-	HsTimestamp            string `json:"hs_timestamp"`
-	HubSpotOwnerId         string `json:"hubspot_owner_id"`
+	HsEmailDirection       string `json:"hs_email_direction,omitempty"`
+	HsEmailSenderEmail     string `json:"hs_email_sender_email,omitempty"`
+	HsEmailSenderFirstName string `json:"hs_email_sender_firstname,omitempty"`
+	HsEmailSenderLastName  string `json:"hs_email_sender_lastname,omitempty"`
+	HsEmailStatus          string `json:"hs_email_status,omitempty"`
+	HsEmailSubject         string `json:"hs_email_subject,omitempty"`
+	HsEmailText            string `json:"hs_email_text,omitempty"`
+	HsEmailToEmail         string `json:"hs_email_to_email,omitempty"`
+	HsEmailToFirstName     string `json:"hs_email_to_firstname,omitempty"`
+	HsEmailToLastName      string `json:"hs_email_to_lastname,omitempty"`
+	HsTimestamp            string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId         string `json:"hubspot_owner_id,omitempty"`
 }
 
 type EmailReadQuery struct {

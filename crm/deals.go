@@ -58,15 +58,14 @@ type Deal struct {
 }
 
 type DealProperties struct {
-	Amount           string `json:"amount"`
-	Closedate        string `json:"closedate"`
-	CreateDate       string `json:"createdate"`
-	DealName         string `json:"dealname"`
-	DealStage        string `json:"dealstage"`
-	LastModifiedDate string `json:"hs_lastmodifieddate"`
-	HubSpotOwnerId   string `json:"hubspot_owner_id"`
-	Pipeline         string `json:"pipeline"`
-	CustomAttributes []CustomAttribute
+	Amount           string `json:"amount,omitempty"`
+	Closedate        string `json:"closedate,omitempty"`
+	CreateDate       string `json:"createdate,omitempty"`
+	DealName         string `json:"dealname,omitempty"`
+	DealStage        string `json:"dealstage,omitempty"`
+	LastModifiedDate string `json:"hs_lastmodifieddate,omitempty"`
+	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
+	Pipeline         string `json:"pipeline,omitempty"`
 }
 
 type DealCreateOrUpdateOptions struct {
@@ -74,12 +73,12 @@ type DealCreateOrUpdateOptions struct {
 }
 
 type DealCreateOrUpdateProperties struct {
-	Amount           string `json:"amount"`
-	Closedate        string `json:"closedate"`
-	DealName         string `json:"dealname"`
-	DealStage        string `json:"dealstage"`
-	HubSpotOwnerId   string `json:"hubspot_owner_id"`
-	Pipeline         string `json:"pipeline"`
+	Amount           string `json:"amount,omitempty"`
+	Closedate        string `json:"closedate,omitempty"`
+	DealName         string `json:"dealname,omitempty"`
+	DealStage        string `json:"dealstage,omitempty"`
+	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
+	Pipeline         string `json:"pipeline,omitempty"`
 }
 
 type DealReadQuery struct {
@@ -171,6 +170,7 @@ func (z *deals) Disassociate(dealId string, toObjectType string, toObjectId int6
 
 func (z *deals) List(query *DealListQuery) (*DealList, error) {
 	u := fmt.Sprintf("crm/v3/objects/deals")
+
 	req, err := z.client.newHttpRequest("GET", u, query)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.List(): newHttpRequest(): %v", err)

@@ -30,9 +30,9 @@ type PipelineStageList struct {
 }
 
 type PipelineStage struct {
-	Label        string      `json:"label"`
-	DisplayOrder int64       `json:"displayOrder"`
-	Metadata     interface{} `json:"metadata"`
+	Label        string      `json:"label,omitempty"`
+	DisplayOrder int64       `json:"displayOrder,omitempty"`
+	Metadata     interface{} `json:"metadata,omitempty"`
 	CreatedAt    string      `json:"createdAt"`
 	UpdatedAt    string      `json:"updatedAt"`
 	Archived     bool        `json:"archived"`
@@ -40,9 +40,9 @@ type PipelineStage struct {
 }
 
 type PipelineStageCreateOrUpdateOptions struct {
-	Label        string      `json:"label"`
-	DisplayOrder int64       `json:"displayOrder"`
-	Metadata     interface{} `json:"metadata"`
+	Label        string      `json:"label,omitempty"`
+	DisplayOrder int64       `json:"displayOrder,omitempty"`
+	Metadata     interface{} `json:"metadata,omitempty"`
 }
 
 type PipelineList struct {

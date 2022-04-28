@@ -17,7 +17,7 @@ type OwnerListQuery struct {
 	Email    string `url:"email,omitempty"`
 	After    string `ur:"after,omitempty"`
 	Limit    string `url:"limit,omitempty"`
-	Archived bool `url:"archived,omitempty"`
+	Archived bool   `url:"archived,omitempty"`
 }
 
 type OwnerList struct {
@@ -26,21 +26,21 @@ type OwnerList struct {
 }
 
 type Owner struct {
-	Id        string `json:"id"`
-	Email     string `json:"email"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	UserId    int64 `json:"userId"`
+	Id        string `json:"id,omitempty"`
+	Email     string `json:"email,omitempty"`
+	FirstName string `json:"firstName,omitempty"`
+	LastName  string `json:"lastName,omitempty"`
+	UserId    int64  `json:"userId,omitempty"`
 	CreatedAt string `json:"createdAt"`
 	UpdatedAt string `json:"updatedAt"`
-	Archived  bool `json:"archived"`
-	Teams     []Team `json:"teams"`
+	Archived  bool   `json:"archived"`
+	Teams     []Team `json:"teams,omitempty"`
 }
 
 type Team struct {
 	Id      string `json:"id"`
 	Name    string `json:"name"`
-	Primary bool `json:"primary"`
+	Primary bool   `json:"primary"`
 }
 
 type OwnerReadQuery struct {

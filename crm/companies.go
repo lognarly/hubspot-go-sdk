@@ -58,15 +58,15 @@ type Company struct {
 }
 
 type CompanyProperties struct {
-	City               string `json:"city"`
+	City               string `json:"city,omitempty"`
 	CreateDate         string `json:"createdate"`
-	Domain             string `json:"domain"`
+	Domain             string `json:"domain,omitempty"`
 	HsObjectId         string `json:"hs_object_id"`
 	HsLastModifiedDate string `json:"hs_lastmodifieddate"`
-	Industry           string `json:"industry"`
-	Name               string `json:"name"`
-	Phone              string `json:"phone"`
-	State              string `json:"state"`
+	Industry           string `json:"industry,omitempty"`
+	Name               string `json:"name,omitempty"`
+	Phone              string `json:"phone,omitempty"`
+	State              string `json:"state,omitempty"`
 }
 
 type CompanyCreateOrUpdateOptions struct {
@@ -74,12 +74,12 @@ type CompanyCreateOrUpdateOptions struct {
 }
 
 type CompanyCreateOrUpdateProperties struct {
-	City             string `json:"city"`
-	Domain           string `json:"domain"`
-	Industry         string `json:"industry"`
-	Name             string `json:"name"`
-	Phone            string `json:"phone"`
-	State            string `json:"state"`
+	City             string `json:"city,omitempty"`
+	Domain           string `json:"domain,omitempty"`
+	Industry         string `json:"industry,omitempty"`
+	Name             string `json:"name,omitempty"`
+	Phone            string `json:"phone,omitempty"`
+	State            string `json:"state,omitempty"`
 }
 
 type CompanyReadQuery struct {

@@ -60,9 +60,9 @@ type Note struct {
 type NoteProperties struct {
 	CreateDate         string `json:"createdate"`
 	HsLastModifiedDate string `json:"hs_lastmodifieddate"`
-	HsNoteBody         string `json:"hs_note_body"`
-	HsTimestamp        string `json:"hs_timestamp"`
-	HubSpotOwnerId     string `json:"hubspot_owner_id"`
+	HsNoteBody         string `json:"hs_note_body,omitempty"`
+	HsTimestamp        string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId     string `json:"hubspot_owner_id,omitempty"`
 }
 
 type NoteCreateOrUpdateOptions struct {
@@ -70,9 +70,9 @@ type NoteCreateOrUpdateOptions struct {
 }
 
 type NoteCreateOrUpdateProperties struct {
-	HsNoteBody         string `json:"hs_note_body"`
-	HsTimestamp        string `json:"hs_timestamp"`
-	HubSpotOwnerId     string `json:"hubspot_owner_id"`
+	HsNoteBody         string `json:"hs_note_body,omitempty"`
+	HsTimestamp        string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId     string `json:"hubspot_owner_id,omitempty"`
 }
 
 type NoteReadQuery struct {
@@ -80,7 +80,7 @@ type NoteReadQuery struct {
 }
 
 type NoteUpdateQuery struct {
-	IdProperty string `url:"idProperty"`
+	IdProperty string `url:"idProperty,omitempty"`
 }
 
 type NoteBatchOutput struct {

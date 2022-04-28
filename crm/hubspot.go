@@ -1,8 +1,6 @@
 package crm
 
-import (
-	//"encoding/json"
-)
+import ()
 
 type ListAssociationsQuery struct {
 	Limit    int    `url:"limit,omitempty"`
@@ -13,17 +11,17 @@ type ListQuery struct {
 	Limit                 int32    `url:"limit,omitempty"`
 	After                 string   `url:"after,omitempty"`
 	Properties            []string `url:"properties,omitempty"`
-	PropertiesWithHistory []string `url:"propertiesWithHistory"`
+	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
 	Associations          []string `url:"associations,omitempty"`
-	Archived              bool     `url:"archived"`
+	Archived              bool     `url:"archived,omitempty"`
 }
 
 type ReadQuery struct {
 	Properties            []string `url:"properties,omitempty"`
-	PropertiesWithHistory []string `url:"propertiesWithHistory"`
+	PropertiesWithHistory []string `url:"propertiesWithHistory,omitempty"`
 	Associations          []string `url:"associations,omitempty"`
-	Archived              bool     `url:"archived"`
-	IdProperty            string   `url:"idProperty"`
+	Archived              bool     `url:"archived,omitempty"`
+	IdProperty            string   `url:"idProperty,omitempty"`
 }
 
 type Pagination struct {
@@ -67,8 +65,8 @@ type SearchOptions struct {
 	Sorts        []string       `json:"sorts,omitempty"`
 	Query        string         `json:"query,omitempty"`
 	Properties   []string       `json:"properties,omitempty"`
-	Limit        int32          `json:"limit"`
-	After        int32          `json:"after"`
+	Limit        int32          `json:"limit,omitempty"`
+	After        int32          `json:"after,omitempty"`
 }
 
 type FilterGroups struct {
@@ -79,7 +77,7 @@ type Filters struct {
 	Value        string                `json:"value,omitempty"`
 	Values       []string              `json:"values,omitempty"`
 	PropertyName string                `json:"propertyName,omitempty"`
-	Operator     FilterOperator        `json:"operator"`
+	Operator     FilterOperator        `json:"operator,omitempty"`
 }
 
 type BatchReadQuery struct {
@@ -95,9 +93,9 @@ type BatchInput struct {
 }
 
 type BatchReadOptions struct {
-	Properties            []string `json:"properties"`
-	PropertiesWithHistory []string `json:"propertiesWithHistory"`
-	IdProperty            string   `json:"idProperty"`
+	Properties            []string `json:"properties,omitempty"`
+	PropertiesWithHistory []string `json:"propertiesWithHistory,omitempty"`
+	IdProperty            string   `json:"idProperty,omitempty"`
 	BatchInputOptions
 }
 
@@ -105,5 +103,3 @@ type MergeOptions struct {
 	PrimaryObjectId string `json:"primaryObjectId"`
 	ObjectIdToMerge string `json:"objectIdToMerge"`
 }
-
-type CustomAttribute map[string]interface{}

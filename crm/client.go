@@ -106,7 +106,6 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 		}
 	}
 
-	//newBody, err := jsonReaderFactory(body)
 	req, err := http.NewRequest(method, u.String(), newBody)
 	if err != nil {
 		return nil, fmt.Errorf("client.newHttpRequest(): http.NewRequest(): %v", err)
@@ -190,15 +189,4 @@ func encodeQueryParams(v url.Values) string {
 		}
 	}
 	return buf.String()
-}
-
-func jsonReaderFactory(in interface{}) (io.Reader, error) {
-	
-    buf := bytes.NewBuffer(nil)
-    enc := json.NewEncoder(buf)
-    err := enc.Encode(in)
-    if err != nil {
-        return nil, fmt.Errorf("creating reader: error encoding data: %s", err)
-    }
-    return buf, nil
 }

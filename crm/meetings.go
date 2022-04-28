@@ -59,17 +59,17 @@ type Meeting struct {
 
 type MeetingProperties struct {
 	CreateDate             string `json:"createdate"`
-	HsInternalMeetingNotes string `json:"hs_internal_meeting_notes"`
+	HsInternalMeetingNotes string `json:"hs_internal_meeting_notes,omitempty"`
 	HsLastModifiedDate     string `json:"hs_lastmodifieddate"`
-	HsMeetingBody          string `json:"hs_meeting_body"`
-	HsMeetingEndTime       string `json:"hs_meeting_end_time"`
-	HsMeetingExternalUrl   string `json:"hs_meeting_external_url"`
-	HsMeetingLocation      string `json:"hs_meeting_location"`
-	HsMeetingOutcome       string `json:"hs_meeting_outcome"`
-	HsMeetingStartTime     string `json:"hs_meeting_start_time"`
-	HsMeetingTitle         string `json:"hs_meeting_title"`
-	HsTimestamp            string `json:"hs_timestamp"`
-	HubSpotOwnerId         string `json:"hubspot_owner_id"`
+	HsMeetingBody          string `json:"hs_meeting_body,omitempty"`
+	HsMeetingEndTime       string `json:"hs_meeting_end_time,omitempty"`
+	HsMeetingExternalUrl   string `json:"hs_meeting_external_url,omitempty"`
+	HsMeetingLocation      string `json:"hs_meeting_location,omitempty"`
+	HsMeetingOutcome       string `json:"hs_meeting_outcome,omitempty"`
+	HsMeetingStartTime     string `json:"hs_meeting_start_time,omitempty"`
+	HsMeetingTitle         string `json:"hs_meeting_title,omitempty"`
+	HsTimestamp            string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId         string `json:"hubspot_owner_id,omitempty"`
 }
 
 type MeetingCreateOrUpdateOptions struct {
@@ -77,16 +77,16 @@ type MeetingCreateOrUpdateOptions struct {
 }
 
 type MeetingCreateOrUpdateProperties struct {
-	HsInternalMeetingNotes string `json:"hs_internal_meeting_notes"`
-	HsMeetingBody          string `json:"hs_meeting_body"`
-	HsMeetingEndTime       string `json:"hs_meeting_end_time"`
-	HsMeetingExternalUrl   string `json:"hs_meeting_external_url"`
-	HsMeetingLocation      string `json:"hs_meeting_location"`
-	HsMeetingOutcome       string `json:"hs_meeting_outcome"`
-	HsMeetingStartTime     string `json:"hs_meeting_start_time"`
-	HsMeetingTitle         string `json:"hs_meeting_title"`
-	HsTimestamp            string `json:"hs_timestamp"`
-	HubSpotOwnerId         string `json:"hubspot_owner_id"`
+	HsInternalMeetingNotes string `json:"hs_internal_meeting_notes,omitempty"`
+	HsMeetingBody          string `json:"hs_meeting_body,omitempty"`
+	HsMeetingEndTime       string `json:"hs_meeting_end_time,omitempty"`
+	HsMeetingExternalUrl   string `json:"hs_meeting_external_url,omitempty"`
+	HsMeetingLocation      string `json:"hs_meeting_location,omitempty"`
+	HsMeetingOutcome       string `json:"hs_meeting_outcome,omitempty"`
+	HsMeetingStartTime     string `json:"hs_meeting_start_time,omitempty"`
+	HsMeetingTitle         string `json:"hs_meeting_title,omitempty"`
+	HsTimestamp            string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId         string `json:"hubspot_owner_id,omitempty"`
 }
 
 type MeetingReadQuery struct {

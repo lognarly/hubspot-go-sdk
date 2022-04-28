@@ -59,15 +59,15 @@ type Call struct {
 
 type CallProperties struct {
 	CreateDate         string `json:"createdate"`
-	HsCallBody         string `json:"hs_call_body"`
-	HsCallDuration     string `json:"hs_call_duration"`
-	HsCallFromNumber   string `json:"hs_call_from_number"`
-	HsCallRecordingUrl string `json:"hs_call_recording_url"`
-	HsCallStatus       string `json:"hs_call_status"`
-	HsCallTitle        string `json:"hs_call_title"`
-	HsCallToNumber     string `json:"hs_call_to_number"`
-	HsTimestamp        string `json:"hs_timestamp"`
-	HubSpotOwnerId     string `json:"hubspot_owner_id"`
+	HsCallBody         string `json:"hs_call_body,omitempty"`
+	HsCallDuration     string `json:"hs_call_duration,omitempty"`
+	HsCallFromNumber   string `json:"hs_call_from_number,omitempty"`
+	HsCallRecordingUrl string `json:"hs_call_recording_url,omitempty"`
+	HsCallStatus       string `json:"hs_call_status,omitempty"`
+	HsCallTitle        string `json:"hs_call_title,omitempty"`
+	HsCallToNumber     string `json:"hs_call_to_number,omitempty"`
+	HsTimestamp        string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId     string `json:"hubspot_owner_id,omitempty"`
 }
 
 type CallCreateOrUpdateOptions struct {
@@ -75,15 +75,15 @@ type CallCreateOrUpdateOptions struct {
 }
 
 type CallCreateOrUpdateProperties struct {
-	HsCallBody         string `json:"hs_call_body"`
-	HsCallDuration     string `json:"hs_call_duration"`
-	HsCallFromNumber   string `json:"hs_call_from_number"`
-	HsCallRecordingUrl string `json:"hs_call_recording_url"`
-	HsCallStatus       string `json:"hs_call_status"`
-	HsCallTitle        string `json:"hs_call_title"`
-	HsCallToNumber     string `json:"hs_call_to_number"`
-	HsTimestamp        string `json:"hs_timestamp"`
-	HubSpotOwnerId     string `json:"hubspot_owner_id"`
+	HsCallBody         string `json:"hs_call_body,omitempty"`
+	HsCallDuration     string `json:"hs_call_duration,omitempty"`
+	HsCallFromNumber   string `json:"hs_call_from_number,omitempty"`
+	HsCallRecordingUrl string `json:"hs_call_recording_url,omitempty"`
+	HsCallStatus       string `json:"hs_call_status,omitempty"`
+	HsCallTitle        string `json:"hs_call_title,omitempty"`
+	HsCallToNumber     string `json:"hs_call_to_number,omitempty"`
+	HsTimestamp        string `json:"hs_timestamp,omitempty"`
+	HubSpotOwnerId     string `json:"hubspot_owner_id,omitempty"`
 }
 
 type CallReadQuery struct {

@@ -46,13 +46,13 @@ type Quote struct {
 
 type QuoteProperties struct {
 	HSCreateDate     string `json:"hs_createdate"`
-	HSExpirationDate string `json:"hs_expiration_date"`
-	HSQuoteAmount    string `json:"hs_quote_amount"`
+	HSExpirationDate string `json:"hs_expiration_date,omitempty"`
+	HSQuoteAmount    string `json:"hs_quote_amount,omitempty"`
 	HSQuoteNumber    string `json:"hs_quote_number"`
-	HSStatus         string `json:"hs_status"`
-	HSTerms          string `json:"hs_terms"`
-	HSTitle          string `json:"hs_title"`
-	HubSpotOwnerId   string `json:"hubspot_owner_id"`
+	HSStatus         string `json:"hs_status,omitempty"`
+	HSTerms          string `json:"hs_terms,omitempty"`
+	HSTitle          string `json:"hs_title,omitempty"`
+	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
 }
 
 type QuoteReadQuery struct {

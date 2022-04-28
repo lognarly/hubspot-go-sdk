@@ -45,15 +45,15 @@ type FeedbackSubmission struct {
 }
 
 type FeedbackSubmissionProperties struct {
-	HSContent        string `json:"hs_content"`
-	HSIngestionId    string `json:"hs_ingestion_id"`
-	HSResponseGroup  string `json:"hs_response_group"`
-	HSSubmissionName string `json:"hs_submission_name"`
-	HSSurveyChannel  string `json:"hs_survey_channel"`
-	HSSurveyId       string `json:"hs_survey_id"`
-	HSSurveyName     string `json:"hs_survey_name"`
-	HSSurveyType     string `json:"hs_survey_type"`
-	HSValue          string `json:"hs_value"`
+	HsContent        string `json:"hs_content,omitempty"`
+	HsIngestionId    string `json:"hs_ingestion_id,omitempty"`
+	HsResponseGroup  string `json:"hs_response_group,omitempty"`
+	HsSubmissionName string `json:"hs_submission_name,omitempty"`
+	HsSurveyChannel  string `json:"hs_survey_channel,omitempty"`
+	HsSurveyId       string `json:"hs_survey_id,omitempty"`
+	HsSurveyName     string `json:"hs_survey_name,omitempty"`
+	HsSurveyType     string `json:"hs_survey_type,omitempty"`
+	HsValue          string `json:"hs_value,omitempty"`
 }
 
 type FeedbackSubmissionReadQuery struct {

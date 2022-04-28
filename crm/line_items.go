@@ -59,12 +59,12 @@ type LineItem struct {
 
 type LineItemProperties struct {
 	CreateDate         string `json:"createdate"`
-	Description        string `json:"description"`
+	Description        string `json:"description,omitempty"`
 	HSLastModifiedDate string `json:"hs_lastmodifieddate"`
-	HSObjectID         string `json:"hs_object_id"`
-	Name               string `json:"name"`
-	Price              string `json:"price"`
-	SKU                string `json:"hs_sku"`
+	HSObjectID         string `json:"hs_object_id,omitempty"`
+	Name               string `json:"name,omitempty"`
+	Price              string `json:"price,omitempty"`
+	SKU                string `json:"hs_sku,omitempty"`
 }
 
 type LineItemCreateOrUpdateOptions struct {
@@ -72,10 +72,10 @@ type LineItemCreateOrUpdateOptions struct {
 }
 
 type LineItemCreateOrUpdateProperties struct {
-	Description      string `json:"description"`
-	Name             string `json:"name"`
-	Price            string `json:"price"`
-	SKU              string `json:"hs_sku"`
+	Description      string `json:"description,omitempty"`
+	Name             string `json:"name,omitempty"`
+	Price            string `json:"price,omitempty"`
+	SKU              string `json:"hs_sku,omitempty"`
 }
 
 type LineItemReadQuery struct {
@@ -83,11 +83,11 @@ type LineItemReadQuery struct {
 }
 
 type LineItemBatchOutput struct {
-	Status      string `json:"status"`
+	Status      string     `json:"status"`
 	Results     []LineItem `json:"results"`
-	RequestedAt string `json:"requestedAt"`
-	StartedAt   string `json:"startedAt"`
-	CompletedAt string `json:"completedAt"`
+	RequestedAt string     `json:"requestedAt"`
+	StartedAt   string     `json:"startedAt"`
+	CompletedAt string     `json:"completedAt"`
 }
 
 type LineItemBatchReadOptions struct {

@@ -59,12 +59,12 @@ type Product struct {
 
 type ProductProperties struct {
 	CreateDate       string `json:"createdate"`
-	Description      string `json:"description"`
+	Description      string `json:"description,omitempty"`
 	LastModifiedDate string `json:"hs_lastmodifieddate"`
 	HSObjectID       string `json:"hs_object_id"`
-	Name             string `json:"name"`
-	Price            string `json:"price"`
-	SKU              string `json:"hs_sku"`
+	Name             string `json:"name,omitempty"`
+	Price            string `json:"price,omitempty"`
+	SKU              string `json:"hs_sku,omitempty"`
 }
 
 type ProductCreateOrUpdateOptions struct {

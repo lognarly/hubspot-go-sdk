@@ -42,9 +42,9 @@ const (
 )
 
 type AssociationType struct {
-	Category HubspotAssociationCategory `json:"category"`
-	TypeId   int64                      `json:"typeId"`
-	Label    string                     `json:"label"`
+	Category HubspotAssociationCategory `json:"category,omitempty"`
+	TypeId   int64                      `json:"typeId,omitempty"`
+	Label    string                     `json:"label,omitempty"`
 }
 
 type AssociationCreateOptions struct {
@@ -57,7 +57,7 @@ type AssociationCreateOutput struct {
 	FromObjectId     int64    `json:"fromObjectId"`
 	ToObjectTypeId   string   `json:"toObjectTypeId"`
 	ToObjectId       int64    `json:"toObjectId"`
-	Labels           []string `json:"labels"`
+	Labels           []string `json:"labels,omitempty"`
 }
 
 type AssociationDefinitionOutput struct {
