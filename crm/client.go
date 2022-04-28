@@ -136,7 +136,7 @@ func (c *Client) do(req *http.Request, v interface{}) (error) {
 		return fmt.Errorf("client.do(): ioutil.Readall(): %v", err)
 	}
 
-	if len(resBody) > 0{
+	if len(resBody) > 0 {
 		err = json.Unmarshal(resBody, v)
 		if err != nil {
 			return fmt.Errorf("client.do(): json.Unmarshal(): %v", err)

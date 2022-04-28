@@ -57,7 +57,7 @@ type Deal struct {
 	Archived   bool           `json:"archived"`
 }
 
-type DealProperties struct {
+/*type DealProperties struct {
 	Amount           string `json:"amount,omitempty"`
 	Closedate        string `json:"closedate,omitempty"`
 	CreateDate       string `json:"createdate"`
@@ -67,6 +67,10 @@ type DealProperties struct {
 	LastModifiedDate string `json:"hs_lastmodifieddate"`
 	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
 	Pipeline         string `json:"pipeline,omitempty"`
+}*/
+
+type DealProperties struct {
+	Data interface{}
 }
 
 type DealCreateOrUpdateOptions struct {
@@ -178,7 +182,7 @@ func (z *deals) List(query *DealListQuery) (*DealList, error) {
 	}
 
 	dl := &DealList{}
-
+	
 	err = z.client.do(req, dl)
 	if err != nil {
 		return nil, fmt.Errorf("client.deals.List(): do()(): %v", err)
