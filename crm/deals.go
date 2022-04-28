@@ -51,39 +51,14 @@ type DealList struct {
 
 type Deal struct {
 	Id         string         `json:"id"`
-	Properties DealProperties `json:"properties"`
+	Properties DealProperties `json:"properties"` //This can be found in deal_properties.go as to not clutter this file
 	CreatedAt  string         `json:"createdAt"`
 	UpdatedAt  string         `json:"updatedAt"`
 	Archived   bool           `json:"archived"`
 }
 
-/*type DealProperties struct {
-	Amount           string `json:"amount,omitempty"`
-	Closedate        string `json:"closedate,omitempty"`
-	CreateDate       string `json:"createdate"`
-	DealName         string `json:"dealname,omitempty"`
-	DealStage        string `json:"dealstage,omitempty"`
-	HsObjectId       string `json:"hs_object_id"`
-	LastModifiedDate string `json:"hs_lastmodifieddate"`
-	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
-	Pipeline         string `json:"pipeline,omitempty"`
-}*/
-
-type DealProperties struct {
-	Data interface{}
-}
-
 type DealCreateOrUpdateOptions struct {
-	Properties DealCreateOrUpdateProperties `json:"properties"`
-}
-
-type DealCreateOrUpdateProperties struct {
-	Amount           string `json:"amount,omitempty"`
-	Closedate        string `json:"closedate,omitempty"`
-	DealName         string `json:"dealname,omitempty"`
-	DealStage        string `json:"dealstage,omitempty"`
-	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
-	Pipeline         string `json:"pipeline,omitempty"`
+	Properties DealProperties `json:"properties"`
 }
 
 type DealReadQuery struct {
@@ -111,8 +86,8 @@ type DealBatchUpdateOptions struct {
 }
 
 type DealBatchUpdateProperties struct {
-	Id         string                       `json:"id"`
-	Properties DealCreateOrUpdateProperties `json:"properties"`
+	Id         string         `json:"id"`
+	Properties DealProperties `json:"properties"` //This can be found in deal_properties.go as to not clutter this file
 }
 
 type DealSearchOptions struct {

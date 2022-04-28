@@ -1,5 +1,5 @@
 package crm
-/*
+
 type DealCalcPrefernce string
 
 const (
@@ -100,4 +100,4 @@ type DealProperties struct {
 	NumAssociatedContacts                  int64                      `json:"num_associated_contacts"`
 	ClosedLostReason                       string                     `json:"closed_lost_reason"`
 	ClosedWonReason                        string                     `json:"closed_won_reason"`
-}*/
+}
