@@ -59,7 +59,7 @@ type DealProperties struct {
 	HsNumAssociatedDealRegistrations       int64                      `json:"hs_num_associated_deal_registrations,omitempty"`
 	HsNumAssociatedDealSplits              int64                      `json:"hs_num_associated_deal_splits,omitempty"`
 	HsNumTargetAccounts                    int64                      `json:"hs_num_target_accounts,omitempty"`
-	HsObjectId                             int64                      `json:"hs_object_id,omitempty"`
+	HsObjectId                             string                     `json:"hs_object_id,omitempty"`
 	HsPredictedAmount                      int64                      `json:"hs_predicted_amount,omitempty"`
 	HsPredictedAmountInHomeCurrency        float64                    `json:"hs_predicted_amount_in_home_currency,omitempty"`
 	HsPriority                             DealPriority               `json:"hs_priority,omitempty"`
