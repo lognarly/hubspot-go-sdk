@@ -39,7 +39,7 @@ type DealProperties struct {
 	HsAcv                                  int64                      `json:"hs_acv,omitempty"`
 	HsArr                                  int64                      `json:"hs_arr,omitempty"`
 	HsCampaign                             string                     `json:"hs_campaign,omitempty"`
-	HsClosedAmount                         int64                      `json:"hs_closed_amount,omitempty"`
+	HsClosedAmount                         float64                    `json:"hs_closed_amount,omitempty"`
 	HsClosedAmountInHomeCurrency           float64                    `json:"hs_closed_amount_in_home_currency,omitempty"`
 	HsCreatedByUserId                      int64                      `json:"hs_created_by_user_id,omitempty"`
 	HsDealAmountCalculationPreference      DealCalcPrefernce          `json:"hs_deal_amount_calculation_preference,omitempty"`
@@ -70,7 +70,7 @@ type DealProperties struct {
 	HsUpdatedByUserId                      string                     `json:"hs_updated_by_user_id,omitempty"`
 	HubspotOwnerAssigneddate               string                     `json:"hubspot_owner_assigneddate,omitempty"`
 	Dealname                               string                     `json:"dealname,omitempty"`
-	Amount                                 int64                      `json:"amount,omitempty"`
+	Amount                                 float64                    `json:"amount,omitempty"`
 	Dealstage                              string                     `json:"dealstage,omitempty"`
 	Pipeline                               string                     `json:"pipeline,omitempty"`
 	Closedate                              string                     `json:"closedate,omitempty"`
