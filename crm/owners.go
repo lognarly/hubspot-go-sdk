@@ -43,6 +43,11 @@ type Team struct {
 	Primary bool `json:"primary"`
 }
 
+type OwnerReadQuery struct {
+	IdProperty string `url:"idProperty,omitempty"`
+	Archived   bool   `url:"archived,omitempty"`
+}
+
 func (z *owners) List(query *OwnerListQuery) (*OwnerList, error) {
 	u := fmt.Sprintf("/crm/v3/owners/")
 	req, err := z.client.newHttpRequest("GET", u, query)
@@ -74,5 +79,5 @@ func (z *owners) Read(ownerId string, query *OwnerReadQuery) (*Owner, error) {
 		return nil, fmt.Errorf("client.owners.Read(): do(): %v", err)
 	}
 	
-	return ow, nil
+	return owner, nil
 }

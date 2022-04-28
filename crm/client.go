@@ -34,6 +34,8 @@ type Client struct {
 	LineItems           LineItems
 	Meetings            Meetings
 	Notes               Notes
+	Owners              Owners
+	Pipelines           Pipelines
 	Products            Products
 	Tasks               Tasks
 	Tickets             Tickets
@@ -64,6 +66,8 @@ func NewClient(apiKey string) (*Client, error) {
 	client.LineItems           = &lineItems{client: client}
 	client.Meetings            = &meetings{client: client}
 	client.Notes               = &notes{client: client}
+	client.Owners              = &owners{client: client}
+	client.Pipelines           = &pipelines{client: client}
 	client.Products            = &products{client: client}
 	client.Tasks               = &tasks{client: client}
 	client.Tickets             = &tickets{client: client}
