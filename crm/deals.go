@@ -50,7 +50,7 @@ type DealList struct {
 }
 
 type Deal struct {
-	ID         string         `json:"id"`
+	Id         string         `json:"id"`
 	Properties DealProperties `json:"properties"`
 	CreatedAt  string         `json:"createdAt"`
 	UpdatedAt  string         `json:"updatedAt"`
@@ -60,10 +60,11 @@ type Deal struct {
 type DealProperties struct {
 	Amount           string `json:"amount,omitempty"`
 	Closedate        string `json:"closedate,omitempty"`
-	CreateDate       string `json:"createdate,omitempty"`
+	CreateDate       string `json:"createdate"`
 	DealName         string `json:"dealname,omitempty"`
 	DealStage        string `json:"dealstage,omitempty"`
-	LastModifiedDate string `json:"hs_lastmodifieddate,omitempty"`
+	HsObjectId       string `json:"hs_object_id"`
+	LastModifiedDate string `json:"hs_lastmodifieddate"`
 	HubSpotOwnerId   string `json:"hubspot_owner_id,omitempty"`
 	Pipeline         string `json:"pipeline,omitempty"`
 }
