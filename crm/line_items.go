@@ -57,25 +57,8 @@ type LineItem struct {
 	Archived   bool               `json:"archived"`
 }
 
-type LineItemProperties struct {
-	CreateDate         string `json:"createdate"`
-	Description        string `json:"description,omitempty"`
-	HSLastModifiedDate string `json:"hs_lastmodifieddate"`
-	HSObjectID         string `json:"hs_object_id,omitempty"`
-	Name               string `json:"name,omitempty"`
-	Price              string `json:"price,omitempty"`
-	SKU                string `json:"hs_sku,omitempty"`
-}
-
 type LineItemCreateOrUpdateOptions struct {
-	Properties LineItemCreateOrUpdateProperties `json:"properties"`
-}
-
-type LineItemCreateOrUpdateProperties struct {
-	Description      string `json:"description,omitempty"`
-	Name             string `json:"name,omitempty"`
-	Price            string `json:"price,omitempty"`
-	SKU              string `json:"hs_sku,omitempty"`
+	Properties LineItemProperties `json:"properties"`
 }
 
 type LineItemReadQuery struct {
@@ -103,8 +86,8 @@ type LineItemBatchUpdateOptions struct {
 }
 
 type LineItemBatchUpdateProperties struct {
-	Id         string                       `json:"id"`
-	Properties LineItemCreateOrUpdateProperties `json:"properties"`
+	Id         string             `json:"id"`
+	Properties LineItemProperties `json:"properties"`
 }
 
 type LineItemSearchOptions struct {

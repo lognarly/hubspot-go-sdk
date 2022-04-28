@@ -57,29 +57,8 @@ type Company struct {
 	Archived   bool              `json:"archived"`
 }
 
-type CompanyProperties struct {
-	City               string `json:"city,omitempty"`
-	CreateDate         string `json:"createdate"`
-	Domain             string `json:"domain,omitempty"`
-	HsObjectId         string `json:"hs_object_id"`
-	HsLastModifiedDate string `json:"hs_lastmodifieddate"`
-	Industry           string `json:"industry,omitempty"`
-	Name               string `json:"name,omitempty"`
-	Phone              string `json:"phone,omitempty"`
-	State              string `json:"state,omitempty"`
-}
-
 type CompanyCreateOrUpdateOptions struct {
-	Properties CompanyCreateOrUpdateProperties `json:"properties"`
-}
-
-type CompanyCreateOrUpdateProperties struct {
-	City             string `json:"city,omitempty"`
-	Domain           string `json:"domain,omitempty"`
-	Industry         string `json:"industry,omitempty"`
-	Name             string `json:"name,omitempty"`
-	Phone            string `json:"phone,omitempty"`
-	State            string `json:"state,omitempty"`
+	Properties CompanyProperties `json:"properties"`
 }
 
 type CompanyReadQuery struct {
@@ -111,8 +90,8 @@ type CompanyBatchUpdateOptions struct {
 }
 
 type CompanyBatchUpdateProperties struct {
-	Id         string                          `json:"id"`
-	Properties CompanyCreateOrUpdateProperties `json:"properties"`
+	Id         string            `json:"id"`
+	Properties CompanyProperties `json:"properties"`
 }
 
 type CompanySearchOptions struct {

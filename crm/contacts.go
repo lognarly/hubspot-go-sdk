@@ -58,29 +58,8 @@ type Contact struct {
 	Archived   bool              `json:"archived"`
 }
 
-type ContactProperties struct {
-	Company          string   `json:"company,omitempty"`
-	CreateDate       string   `json:"createdate"`
-	Email            string   `json:"email"`
-	FirstName        string   `json:"firstname,omitempty"`
-	HSObjectID       string   `json:"hs_object_id"`
-	LastModifiedDate string   `json:"lastmodifieddate"`
-	LastName         string   `json:"lastname,omitempty"`
-	Phone            string   `json:"phone,omitempty"`
-	Website          string   `json:"website,omitempty"`
-}
-
 type ContactCreateOrUpdateOptions struct {
-	Properties ContactCreateOrUpdateProperties `json:"properties"`
-}
-
-type ContactCreateOrUpdateProperties struct {
-	Company          string   `json:"company,omitempty"`
-	Email            string   `json:"email"`
-	FirstName        string   `json:"firstname,omitempty"`
-	LastName         string   `json:"lastname,omitempty"`
-	Phone            string   `json:"phone,omitempty"`
-	Website          string   `json:"website,omitempty"`
+	Properties ContactProperties `json:"properties"`
 }
 
 type ContactReadQuery struct {
@@ -108,8 +87,8 @@ type ContactBatchUpdateOptions struct {
 }
 
 type ContactBatchUpdateProperties struct {
-	Id         string                          `json:"id"`
-	Properties ContactCreateOrUpdateProperties `json:"properties"`
+	Id         string            `json:"id"`
+	Properties ContactProperties `json:"properties"`
 }
 
 type ContactGdprDeleteOptions struct {

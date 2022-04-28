@@ -54,26 +54,8 @@ type Ticket struct {
 	Properties TicketProperties `json:"properties"`
 }
 
-type TicketProperties struct {
-	CreateDate               string `json:"createdate"`
-	HSLastModifiedDate       string `json:"hs_lastmodifieddate"`
-	HSPipeline               string `json:"hs_pipeline"`
-	HSPipelineStage          string `json:"hs_pipeline_stage"`
-	HSTicketPriority         string `json:"hs_ticket_priority"`
-	HubSpotOwnerId           string `json:"hubspot_owner_id"`
-	Subject                  string `json:"subject"`
-}
-
 type TicketCreateOrUpdateOptions struct {
-	Properties TicketCreateOrUpdateProperties `json:"properties"`
-}
-
-type TicketCreateOrUpdateProperties struct {
-	HSPipeline               string `json:"hs_pipeline"`
-	HSPipelineStage          string `json:"hs_pipeline_stage"`
-	HSTicketPriority         string `json:"hs_ticket_priority"`
-	HubSpotOwnerId           string `json:"hubspot_owner_id"`
-	Subject                  string `json:"subject"`
+	Properties TicketProperties `json:"properties"`
 }
 
 type TicketReadQuery struct {
@@ -101,8 +83,8 @@ type TicketBatchUpdateOptions struct {
 }
 
 type TicketBatchUpdateProperties struct {
-	Id         string                       `json:"id"`
-	Properties TicketCreateOrUpdateProperties `json:"properties"`
+	Id         string           `json:"id"`
+	Properties TicketProperties `json:"properties"`
 }
 
 type TicketSearchOptions struct {

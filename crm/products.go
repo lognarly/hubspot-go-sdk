@@ -57,25 +57,8 @@ type Product struct {
 	Archived   bool              `json:"archived"`
 }
 
-type ProductProperties struct {
-	CreateDate       string `json:"createdate"`
-	Description      string `json:"description,omitempty"`
-	LastModifiedDate string `json:"hs_lastmodifieddate"`
-	HSObjectID       string `json:"hs_object_id"`
-	Name             string `json:"name,omitempty"`
-	Price            string `json:"price,omitempty"`
-	SKU              string `json:"hs_sku,omitempty"`
-}
-
 type ProductCreateOrUpdateOptions struct {
-	Properties ProductCreateOrUpdateProperties `json:"properties"`
-}
-
-type ProductCreateOrUpdateProperties struct {
-	Description      string `json:"description,omitempty"`
-	Name             string `json:"name"`
-	Price            string `json:"price,omitempty"`
-	SKU              string `json:"hs_sku,omitempty"`
+	Properties ProductProperties `json:"properties"`
 }
 
 type ProductReadQuery struct {
@@ -103,8 +86,8 @@ type ProductBatchUpdateOptions struct {
 }
 
 type ProductBatchUpdateProperties struct {
-	Id         string                          `json:"id"`
-	Properties ProductCreateOrUpdateProperties `json:"properties"`
+	Id         string            `json:"id"`
+	Properties ProductProperties `json:"properties"`
 }
 
 type ProductSearchOptions struct {
