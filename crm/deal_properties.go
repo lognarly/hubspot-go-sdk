@@ -1,7 +1,6 @@
 package crm
 
 type DealCalcPrefernce string
-
 const (
 	HsTcv    DealCalcPrefernce = "TCV"
 	HsArr    DealCalcPrefernce = "ARR"
@@ -10,7 +9,6 @@ const (
 )
 
 type DealManualForecastCategory string
-
 const (
 	HsOmit       DealManualForecastCategory = "OMIT"
 	HsPipeline   DealManualForecastCategory = "PIPELINE"
@@ -21,7 +19,6 @@ const (
 )
 
 type DealPriority string
-
 const (
 	HsLow    DealPriority = "low"
 	HsMedium DealPriority = "medium"
@@ -29,7 +26,6 @@ const (
 )
 
 type DealType string
-
 const (
 	NewBusiness      DealType = "newbusiness"
 	ExistingBusiness DealType = "existingbusiness"
