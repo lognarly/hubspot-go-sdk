@@ -66,6 +66,7 @@ type DealProperties struct {
 	LastModifiedDate string `json:"hs_lastmodifieddate"`
 	HubSpotOwnerId   string `json:"hubspot_owner_id"`
 	Pipeline         string `json:"pipeline"`
+	CustomAttributes []CustomAttribute
 }
 
 type DealCreateOrUpdateOptions struct {

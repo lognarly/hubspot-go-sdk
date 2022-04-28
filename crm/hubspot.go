@@ -105,3 +105,5 @@ type MergeOptions struct {
 	PrimaryObjectId string `json:"primaryObjectId"`
 	ObjectIdToMerge string `json:"objectIdToMerge"`
 }
+
+type CustomAttribute map[string]interface{}
