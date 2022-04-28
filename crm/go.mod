@@ -1,4 +1,4 @@
-module github.com/lognarly/hubspot-go-sdk/crm
+module github.com/lognarly/hubspot-go-sdk
 
 go 1.18
 
