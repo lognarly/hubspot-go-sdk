@@ -70,7 +70,7 @@ type DealProperties struct {
 	HsUpdatedByUserId                      string                     `json:"hs_updated_by_user_id,omitempty"`
 	HubspotOwnerAssigneddate               string                     `json:"hubspot_owner_assigneddate,omitempty"`
 	DealName                               string                     `json:"dealname,omitempty"`
-	Amount                                 float64                    `json:"amount,omitempty"`
+	Amount                                 string                     `json:"amount,omitempty"`
 	DealStage                              string                     `json:"dealstage,omitempty"`
 	Pipeline                               string                     `json:"pipeline,omitempty"`
 	CloseDate                              string                     `json:"closedate,omitempty"`
