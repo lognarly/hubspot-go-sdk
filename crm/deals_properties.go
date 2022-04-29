@@ -33,7 +33,7 @@ const (
 
 type DealProperties struct {
 	AmountInHomeCurrency                   int64                      `json:"amount_in_home_currency,omitempty"`
-	CreatedByApi                           bool                       `json:"createdbyapi,omitempty"` //This is specific to an attribute used by my company
+	CreatedByApi                           string                     `json:"createdbyapi,omitempty"` //This is specific to an attribute used by my company
 	DaysToClose                            int64                      `json:"days_to_close,omitempty"`
 	DealCurrencyCode                       string                     `json:"deal_currency_code,omitempty"`
 	HsAcv                                  int64                      `json:"hs_acv,omitempty"`
