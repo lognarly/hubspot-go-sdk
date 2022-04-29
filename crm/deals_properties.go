@@ -32,40 +32,40 @@ const (
 )
 
 type DealProperties struct {
-	AmountInHomeCurrency                   int64                      `json:"amount_in_home_currency,omitempty"`
+	AmountInHomeCurrency                   string                     `json:"amount_in_home_currency,omitempty"`
 	CreatedByApi                           string                     `json:"createdbyapi,omitempty"` //This is specific to an attribute used by my company
-	DaysToClose                            int64                      `json:"days_to_close,omitempty"`
+	DaysToClose                            string                     `json:"days_to_close,omitempty"`
 	DealCurrencyCode                       string                     `json:"deal_currency_code,omitempty"`
-	HsAcv                                  int64                      `json:"hs_acv,omitempty"`
-	HsArr                                  int64                      `json:"hs_arr,omitempty"`
+	HsAcv                                  string                     `json:"hs_acv,omitempty"`
+	HsArr                                  string                     `json:"hs_arr,omitempty"`
 	HsCampaign                             string                     `json:"hs_campaign,omitempty"`
-	HsClosedAmount                         float64                    `json:"hs_closed_amount,omitempty"`
-	HsClosedAmountInHomeCurrency           float64                    `json:"hs_closed_amount_in_home_currency,omitempty"`
-	HsCreatedByUserId                      int64                      `json:"hs_created_by_user_id,omitempty"`
+	HsClosedAmount                         string                     `json:"hs_closed_amount,omitempty"`
+	HsClosedAmountInHomeCurrency           string                     `json:"hs_closed_amount_in_home_currency,omitempty"`
+	HsCreatedByUserId                      string                     `json:"hs_created_by_user_id,omitempty"`
 	HsDealAmountCalculationPreference      DealCalcPrefernce          `json:"hs_deal_amount_calculation_preference,omitempty"`
-	HsDealStageProbability                 int64                      `json:"hs_deal_stage_probability,omitempty"`
-	HsDealStageProbabilityShadow           int64                      `json:"hs_deal_stage_probability_shadow,omitempty"`
-	HsForecastAmount                       int64                      `json:"hs_forecast_amount,omitempty"`
-	HsForecastProbability                  int64                      `json:"hs_forecast_probability,omitempty"`
-	HsIsClosed                             bool                       `json:"hs_is_closed,omitempty"`
-	HsIsClosedWon                          bool                       `json:"hs_is_closed_won,omitempty"`
-	HsIsDealSplit                          bool                       `json:"hs_is_deal_split,omitempty"`
+	HsDealStageProbability                 string                     `json:"hs_deal_stage_probability,omitempty"`
+	HsDealStageProbabilityShadow           string                     `json:"hs_deal_stage_probability_shadow,omitempty"`
+	HsForecastAmount                       string                     `json:"hs_forecast_amount,omitempty"`
+	HsForecastProbability                  string                     `json:"hs_forecast_probability,omitempty"`
+	HsIsClosed                             string                     `json:"hs_is_closed,omitempty"`
+	HsIsClosedWon                          string                     `json:"hs_is_closed_won,omitempty"`
+	HsIsDealSplit                          string                     `json:"hs_is_deal_split,omitempty"`
 	HsLastmodifieddate                     string                     `json:"hs_lastmodifieddate,omitempty"`
-	HsLikelihoodToClose                    int64                      `json:"hs_likelihood_to_close,omitempty"`
-	HsManualForecastCategory 			   DealManualForecastCategory `json:"hs_manual_forecast_category,omitempty"`
-	HsMrr 								   int64                      `json:"hs_mrr,omitempty"`
-	HsNextStep 							   string                     `json:"hs_next_step,omitempty"`
-	HsNumAssociatedActiveDealRegistrations int64                      `json:"hs_num_associated_active_deal_registrations,omitempty"`
-	HsNumAssociatedDealRegistrations       int64                      `json:"hs_num_associated_deal_registrations,omitempty"`
-	HsNumAssociatedDealSplits              int64                      `json:"hs_num_associated_deal_splits,omitempty"`
-	HsNumTargetAccounts                    int64                      `json:"hs_num_target_accounts,omitempty"`
+	HsLikelihoodToClose                    string                     `json:"hs_likelihood_to_close,omitempty"`
+	HsManualForecastCategory               DealManualForecastCategory `json:"hs_manual_forecast_category,omitempty"`
+	HsMrr                                  string                     `json:"hs_mrr,omitempty"`
+	HsNextStep                             string                     `json:"hs_next_step,omitempty"`
+	HsNumAssociatedActiveDealRegistrations string                     `json:"hs_num_associated_active_deal_registrations,omitempty"`
+	HsNumAssociatedDealRegistrations       string                     `json:"hs_num_associated_deal_registrations,omitempty"`
+	HsNumAssociatedDealSplits              string                     `json:"hs_num_associated_deal_splits,omitempty"`
+	HsNumTargetAccounts                    string                     `json:"hs_num_target_accounts,omitempty"`
 	HsObjectId                             string                     `json:"hs_object_id,omitempty"`
-	HsPredictedAmount                      int64                      `json:"hs_predicted_amount,omitempty"`
-	HsPredictedAmountInHomeCurrency        float64                    `json:"hs_predicted_amount_in_home_currency,omitempty"`
+	HsPredictedAmount                      string                     `json:"hs_predicted_amount,omitempty"`
+	HsPredictedAmountInHomeCurrency        string                     `json:"hs_predicted_amount_in_home_currency,omitempty"`
 	HsPriority                             DealPriority               `json:"hs_priority,omitempty"`
-	HsProjectedAmount                      float64                    `json:"hs_projected_amount,omitempty"`
-	HsProjectedAmountInHomeCurrency        float64                    `json:"hs_projected_amount_in_home_currency,omitempty"`
-	HsTcv                                  int64                      `json:"hs_tcv,omitempty"`
+	HsProjectedAmount                      string                     `json:"hs_projected_amount,omitempty"`
+	HsProjectedAmountInHomeCurrency        string                     `json:"hs_projected_amount_in_home_currency,omitempty"`
+	HsTcv                                  string                     `json:"hs_tcv,omitempty"`
 	HsUniqueCreationKey                    string                     `json:"hs_unique_creation_key,omitempty"`
 	HsUpdatedByUserId                      string                     `json:"hs_updated_by_user_id,omitempty"`
 	HubspotOwnerAssigneddate               string                     `json:"hubspot_owner_assigneddate,omitempty"`
@@ -85,8 +85,8 @@ type DealProperties struct {
 	NotesLastContacted                     string                     `json:"notes_last_contacted,omitempty"`
 	NotesLastUpdated                       string                     `json:"notes_last_updated,omitempty"`
 	NotesNextActivityDate                  string                     `json:"notes_next_activity_date,omitempty"`
-	NumContactedNotes                      int64                      `json:"num_contacted_notes,omitempty"`
-	NumNotes                               int64                      `json:"num_notes,omitempty"`
+	NumContactedNotes                      string                     `json:"num_contacted_notes,omitempty"`
+	NumNotes                               string                     `json:"num_notes,omitempty"`
 	HsCreatedate                           string                     `json:"hs_createdate,omitempty"`
 	HubspotTeamId                          string                     `json:"hubspot_team_id,omitempty"`
 	DealType                               DealType                   `json:"dealtype,omitempty"`
@@ -94,7 +94,7 @@ type DealProperties struct {
 	Description                            string                     `json:"description,omitempty"`
 	HsAllTeamIds                           string                     `json:"hs_all_team_ids,omitempty"`
 	HsAllAccessibleTeamIds                 string                     `json:"hs_all_accessible_team_ids,omitempty"`
-	NumAssociatedContacts                  int64                      `json:"num_associated_contacts,omitempty"`
+	NumAssociatedContacts                  string                     `json:"num_associated_contacts,omitempty"`
 	ClosedLostReason                       string                     `json:"closed_lost_reason,omitempty"`
 	ClosedWonReason                        string                     `json:"closed_won_reason,omitempty"`
 }
