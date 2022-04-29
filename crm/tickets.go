@@ -2,13 +2,12 @@ package crm
 
 import (
     "fmt"
-	"strconv"
 )
 
 type Tickets interface {
 	ListAssociations(query *TicketAssociationsQuery, ticketId string, toObjectType string) (*TicketAssociations, error)
-	Associate(ticketId string, toObjectType string, toObjectId int64, associationType string) (*Ticket, error)
-	Disassociate(ticketId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Associate(ticketId string, toObjectType string, toObjectId string, associationType string) (*Ticket, error)
+	Disassociate(ticketId string, toObjectType string, toObjectId string, associationType string) (error)
 	List(query *TicketsListQuery) (*TicketList, error)
 	Create(options *TicketCreateOrUpdateOptions) (*Ticket, error)
 	Read(ticketId string, query *TicketReadQuery) (*Ticket, error)
@@ -117,8 +116,8 @@ func (z *tickets) ListAssociations(query *TicketAssociationsQuery, ticketId stri
 	return ta, nil
 }
 
-func (z *tickets) Associate(ticketId string, toObjectType string, toObjectId int64, associationType string) (*Ticket, error) {
-	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *tickets) Associate(ticketId string, toObjectType string, toObjectId string, associationType string) (*Ticket, error) {
+	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("PUT", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.tickets.Associate(): newHttpRequest(): %v", err)
@@ -134,8 +133,8 @@ func (z *tickets) Associate(ticketId string, toObjectType string, toObjectId int
 	return ticket, nil
 }
 
-func (z *tickets) Disassociate(ticketId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *tickets) Disassociate(ticketId string, toObjectType string, toObjectId string, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/tickets/%s/associations/%s/%s/%s", ticketId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.tickets.Disassociate(): newHttpRequest(): %v", err)

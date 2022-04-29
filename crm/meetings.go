@@ -2,13 +2,12 @@ package crm
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type Meetings interface {
 	ListAssociations(query *MeetingAssociationsQuery, meetingId string, toObjectType string) (*MeetingAssociations, error)
-	Associate(meetingId string, toObjectType string, toObjectId int64, associationType string) (*Meeting, error)
-	Disassociate(meetingId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Associate(meetingId string, toObjectType string, toObjectId string, associationType string) (*Meeting, error)
+	Disassociate(meetingId string, toObjectType string, toObjectId string, associationType string) (error)
 	List(query *MeetingListQuery) (*MeetingList, error)
 	Create(options *MeetingCreateOrUpdateOptions) (*Meeting, error)
 	Read(query *MeetingReadQuery, meetingId string) (*Meeting, error)
@@ -153,8 +152,8 @@ func (z *meetings) ListAssociations(query *MeetingAssociationsQuery, meetingId s
 	return ca, nil
 }
 
-func (z *meetings) Associate(meetingId string, toObjectType string, toObjectId int64, associationType string) (*Meeting, error) {
-	u := fmt.Sprintf("/crm/v3/objects/meetings/%s/associations/%s/%s/%s", meetingId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *meetings) Associate(meetingId string, toObjectType string, toObjectId string, associationType string) (*Meeting, error) {
+	u := fmt.Sprintf("/crm/v3/objects/meetings/%s/associations/%s/%s/%s", meetingId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("PUT", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.meetings.Associate(): newHttpRequest(): %v", err)
@@ -170,8 +169,8 @@ func (z *meetings) Associate(meetingId string, toObjectType string, toObjectId i
 	return meeting, nil
 }
 
-func (z *meetings) Disassociate(meetingId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/meetings/%s/associations/%s/%s/%s", meetingId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *meetings) Disassociate(meetingId string, toObjectType string, toObjectId string, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/meetings/%s/associations/%s/%s/%s", meetingId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.meetings.Disassociate(): newHttpRequest(): %v", err)

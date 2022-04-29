@@ -2,13 +2,12 @@ package crm
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type Notes interface {
 	ListAssociations(query *NoteAssociationsQuery, noteId string, toObjectType string) (*NoteAssociations, error)
-	Associate(noteId string, toObjectType string, toObjectId int64, associationType string) (*Note, error)
-	Disassociate(noteId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Associate(noteId string, toObjectType string, toObjectId string, associationType string) (*Note, error)
+	Disassociate(noteId string, toObjectType string, toObjectId string, associationType string) (error)
 	List(query *NoteListQuery) (*NoteList, error)
 	Create(options *NoteCreateOrUpdateOptions) (*Note, error)
 	Read(query *NoteReadQuery, noteId string) (*Note, error)
@@ -139,8 +138,8 @@ func (z *notes) ListAssociations(query *NoteAssociationsQuery, noteId string, to
 	return ca, nil
 }
 
-func (z *notes) Associate(noteId string, toObjectType string, toObjectId int64, associationType string) (*Note, error) {
-	u := fmt.Sprintf("/crm/v3/objects/notes/%s/associations/%s/%s/%s", noteId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *notes) Associate(noteId string, toObjectType string, toObjectId string, associationType string) (*Note, error) {
+	u := fmt.Sprintf("/crm/v3/objects/notes/%s/associations/%s/%s/%s", noteId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("PUT", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.notes.Associate(): newHttpRequest(): %v", err)
@@ -156,8 +155,8 @@ func (z *notes) Associate(noteId string, toObjectType string, toObjectId int64, 
 	return note, nil
 }
 
-func (z *notes) Disassociate(noteId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/notes/%s/associations/%s/%s/%s", noteId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *notes) Disassociate(noteId string, toObjectType string, toObjectId string, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/notes/%s/associations/%s/%s/%s", noteId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.notes.Disassociate(): newHttpRequest(): %v", err)

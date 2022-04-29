@@ -29,7 +29,7 @@ type AssociationList struct {
 }
 
 type AssociationListResult struct {
-	ToObjectId       int               `json:"toObjectId"`
+	ToObjectId       int64             `json:"toObjectId"`
 	AssociationTypes []AssociationType `json:"associationTypes"`
 }
 

@@ -2,13 +2,12 @@ package crm
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type LineItems interface {
 	ListAssociations(query *LineItemAssociationsQuery, lineItem string, toObjectType string) (*LineItemAssociations, error)
-	Associate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (*LineItem, error)
-	Disassociate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Associate(lineItemId string, toObjectType string, toObjectId string, associationType string) (*LineItem, error)
+	Disassociate(lineItemId string, toObjectType string, toObjectId string, associationType string) (error)
 	List(query *LineItemListQuery) (*LineItemList, error)
 	Create(options *LineItemCreateOrUpdateOptions) (*LineItem, error)
 	Read(query *LineItemReadQuery, lineItemId string) (*LineItem, error)
@@ -121,8 +120,8 @@ func (z *lineItems) ListAssociations(query *LineItemAssociationsQuery, lineItemI
 	return la, nil
 }
 
-func (z *lineItems) Associate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (*LineItem, error) {
-	u := fmt.Sprintf("/crm/v3/objects/line_items/%s/associations/%s/%s/%s", lineItemId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *lineItems) Associate(lineItemId string, toObjectType string, toObjectId string, associationType string) (*LineItem, error) {
+	u := fmt.Sprintf("/crm/v3/objects/line_items/%s/associations/%s/%s/%s", lineItemId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("PUT", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.lineItems.Associate(): newHttpRequest(): %v", err)
@@ -138,8 +137,8 @@ func (z *lineItems) Associate(lineItemId string, toObjectType string, toObjectId
 	return lineItem, nil
 }
 
-func (z *lineItems) Disassociate(lineItemId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/lineItems/%s/associations/%s/%s/%s", lineItemId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *lineItems) Disassociate(lineItemId string, toObjectType string, toObjectId string, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/lineItems/%s/associations/%s/%s/%s", lineItemId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.lineItems.Disassociate(): newHttpRequest(): %v", err)

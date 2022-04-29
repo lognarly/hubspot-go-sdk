@@ -2,13 +2,12 @@ package crm
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type Products interface {
 	ListAssociations(query *ProductAssociationsQuery, productId string, toObjectType string) (*ProductAssociations, error)
-	Associate(productId string, toObjectType string, toObjectId int64, associationType string) (*Product, error)
-	Disassociate(productId string, toObjectType string, toObjectId int64, associationType string) (error)
+	Associate(productId string, toObjectType string, toObjectId string, associationType string) (*Product, error)
+	Disassociate(productId string, toObjectType string, toObjectId string, associationType string) (error)
 	List(query *ProductListQuery) (*ProductList, error)
 	Create(options *ProductCreateOrUpdateOptions) (*Product, error)
 	Read(query *ProductReadQuery, productId string) (*Product, error)
@@ -121,8 +120,8 @@ func (z *products) ListAssociations(query *ProductAssociationsQuery, productId s
 	return pa, nil
 }
 
-func (z *products) Associate(productId string, toObjectType string, toObjectId int64, associationType string) (*Product, error) {
-	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *products) Associate(productId string, toObjectType string, toObjectId string, associationType string) (*Product, error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("PUT", u, nil)
 	if err != nil {
 		return nil, fmt.Errorf("client.products.Associate(): newHttpRequest(): %v", err)
@@ -138,8 +137,8 @@ func (z *products) Associate(productId string, toObjectType string, toObjectId i
 	return product, nil
 }
 
-func (z *products) Disassociate(productId string, toObjectType string, toObjectId int64, associationType string) (error) {
-	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, strconv.FormatInt(toObjectId, 10), associationType)
+func (z *products) Disassociate(productId string, toObjectType string, toObjectId string, associationType string) (error) {
+	u := fmt.Sprintf("/crm/v3/objects/products/%s/associations/%s/%s/%s", productId, toObjectType, toObjectId, associationType)
 	req, err := z.client.newHttpRequest("DELETE", u, nil)
 	if err != nil {
 		return fmt.Errorf("client.products.Disassociate(): newHttpRequest(): %v", err)
