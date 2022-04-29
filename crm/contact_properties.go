@@ -163,7 +163,7 @@ type ContactProperties struct {
 	StartDate                                        string  `json:"start_date,omitempty"`
 	TotalRevenue                                     int64   `json:"total_revenue,omitempty"`
 	WorkEmail                                        string  `json:"work_email,omitempty"`
-	Firstname                                        string  `json:"firstname,omitempty"`
+	FirstName                                        string  `json:"firstname,omitempty"`
 	HsAnalyticsFirstUrl                              string  `json:"hs_analytics_first_url,omitempty"`
 	HsEmailDelivered                                 int64   `json:"hs_email_delivered,omitempty"`
 	Twitterhandle                                    string  `json:"twitterhandle,omitempty"`
@@ -171,7 +171,7 @@ type ContactProperties struct {
 	Followercount                                    int64   `json:"followercount,omitempty"`
 	HsAnalyticsLastUrl                               string  `json:"hs_analytics_last_url,omitempty"`
 	HsEmailOpen                                      int64   `json:"hs_email_open,omitempty"`
-	Lastname                                         string  `json:"lastname,omitempty"`
+	LastName                                         string  `json:"lastname,omitempty"`
 	HsAnalyticsNumPageViews                          int64   `json:"hs_analytics_num_page_views,omitempty"`
 	HsEmailClick                                     int64   `json:"hs_email_click,omitempty"`
 	Salutation                                       string  `json:"salutation,omitempty"`
