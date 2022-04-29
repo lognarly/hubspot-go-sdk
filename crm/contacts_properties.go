@@ -77,8 +77,8 @@ type ContactProperties struct {
 	HsGoogleplusid                                   string  `json:"hs_googleplusid,omitempty"`
 	HsHasActiveSubscription                          int64   `json:"hs_has_active_subscription,omitempty"`
 	HsIpTimezone                                     string  `json:"hs_ip_timezone,omitempty"`
-	HsIsContact                                      bool    `json:"hs_is_contact,omitempty"`
-	HsIsUnworked                                     bool    `json:"hs_is_unworked,omitempty"`
+	HsIsContact                                      string  `json:"hs_is_contact,omitempty"`
+	HsIsUnworked                                     string  `json:"hs_is_unworked,omitempty"`
 	HsLastSalesActivityDate                          string  `json:"hs_last_sales_activity_date,omitempty"`
 	HsLastSalesActivityTimestamp                     string  `json:"hs_last_sales_activity_timestamp,omitempty"`
 	HsLastmodifieddate                               string  `json:"hs_lastmodifieddate,omitempty"`
