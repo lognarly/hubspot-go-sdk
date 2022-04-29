@@ -71,7 +71,7 @@ type DealProperties struct {
 	HubspotOwnerAssigneddate               string                     `json:"hubspot_owner_assigneddate,omitempty"`
 	DealName                               string                     `json:"dealname,omitempty"`
 	Amount                                 float64                    `json:"amount,omitempty"`
-	Dealstage                              string                     `json:"dealstage,omitempty"`
+	DealStage                              string                     `json:"dealstage,omitempty"`
 	Pipeline                               string                     `json:"pipeline,omitempty"`
 	CloseDate                              string                     `json:"closedate,omitempty"`
 	CreateDate                             string                     `json:"createdate,omitempty"`
@@ -89,7 +89,7 @@ type DealProperties struct {
 	NumNotes                               int64                      `json:"num_notes,omitempty"`
 	HsCreatedate                           string                     `json:"hs_createdate,omitempty"`
 	HubspotTeamId                          string                     `json:"hubspot_team_id,omitempty"`
-	Dealtype                               DealType                   `json:"dealtype,omitempty"`
+	DealType                               DealType                   `json:"dealtype,omitempty"`
 	HsAllOwnerIds                          string                     `json:"hs_all_owner_ids,omitempty"`
 	Description                            string                     `json:"description,omitempty"`
 	HsAllTeamIds                           string                     `json:"hs_all_team_ids,omitempty"`
