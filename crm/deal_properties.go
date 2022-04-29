@@ -69,12 +69,12 @@ type DealProperties struct {
 	HsUniqueCreationKey                    string                     `json:"hs_unique_creation_key,omitempty"`
 	HsUpdatedByUserId                      string                     `json:"hs_updated_by_user_id,omitempty"`
 	HubspotOwnerAssigneddate               string                     `json:"hubspot_owner_assigneddate,omitempty"`
-	Dealname                               string                     `json:"dealname,omitempty"`
+	DealName                               string                     `json:"dealname,omitempty"`
 	Amount                                 float64                    `json:"amount,omitempty"`
 	Dealstage                              string                     `json:"dealstage,omitempty"`
 	Pipeline                               string                     `json:"pipeline,omitempty"`
-	Closedate                              string                     `json:"closedate,omitempty"`
-	Createdate                             string                     `json:"createdate,omitempty"`
+	CloseDate                              string                     `json:"closedate,omitempty"`
+	CreateDate                             string                     `json:"createdate,omitempty"`
 	EngagementsLastMeetingBooked           string                     `json:"engagements_last_meeting_booked,omitempty"`
 	EngagementsLastMeetingBookedCampaign   string                     `json:"engagements_last_meeting_booked_campaign,omitempty"`
 	EngagementsLastMeetingBookedMedium     string                     `json:"engagements_last_meeting_booked_medium,omitempty"`
