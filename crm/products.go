@@ -50,7 +50,7 @@ type ProductList struct {
 }
 
 type Product struct {
-	ID         string            `json:"id"`
+	Id         string            `json:"id"`
 	Properties ProductProperties `json:"properties"`
 	CreatedAt  string            `json:"createdAt"`
 	UpdatedAt  string            `json:"updatedAt"`

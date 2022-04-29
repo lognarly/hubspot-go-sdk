@@ -51,7 +51,7 @@ type ContactList struct {
 }
 
 type Contact struct {
-	ID         string            `json:"id"`
+	Id         string            `json:"id"`
 	Properties ContactProperties `json:"properties"`
 	CreatedAt  string            `json:"createdAt"`
 	UpdatedAt  string            `json:"updatedAt"`
