@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -13,6 +12,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -48,31 +49,31 @@ func NewClient(apiKey string) (*Client, error) {
 	}
 
 	client := &Client{
-		baseURL:     DefaultAddress,
-		apiKey:      apiKey,
+		baseURL: DefaultAddress,
+		apiKey:  apiKey,
 	}
 
 	client.http = &http.Client{
 		Timeout: time.Duration(30 * time.Second),
 	}
 
-	client.Associations        = &associations{client: client}
-	client.Calls               = &calls{client: client}
-	client.Companies           = &companies{client: client}
-	client.Contacts            = &contacts{client: client}
-	client.Deals               = &deals{client: client}
-	client.Emails              = &emails{client: client}
+	client.Associations = &associations{client: client}
+	client.Calls = &calls{client: client}
+	client.Companies = &companies{client: client}
+	client.Contacts = &contacts{client: client}
+	client.Deals = &deals{client: client}
+	client.Emails = &emails{client: client}
 	client.FeedbackSubmissions = &feedbackSubmissions{client: client}
-	client.LineItems           = &lineItems{client: client}
-	client.Meetings            = &meetings{client: client}
-	client.Notes               = &notes{client: client}
-	client.Owners              = &owners{client: client}
-	client.Pipelines           = &pipelines{client: client}
-	client.Products            = &products{client: client}
-	client.Tasks               = &tasks{client: client}
-	client.Tickets             = &tickets{client: client}
-	client.Quotes              = &quotes{client: client}
-	
+	client.LineItems = &lineItems{client: client}
+	client.Meetings = &meetings{client: client}
+	client.Notes = &notes{client: client}
+	client.Owners = &owners{client: client}
+	client.Pipelines = &pipelines{client: client}
+	client.Products = &products{client: client}
+	client.Tasks = &tasks{client: client}
+	client.Tickets = &tickets{client: client}
+	client.Quotes = &quotes{client: client}
+
 	return client, nil
 }
 
@@ -87,7 +88,8 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 
 	reqHeaders := make(http.Header)
 	reqHeaders.Set("Content-Type", "application/json")
-	
+	reqHeaders.Set("Authorization", fmt.Sprintf("Bearer %s", c.apiKey))
+
 	switch method {
 	case "GET", "DELETE":
 		if v != nil {
@@ -118,7 +120,7 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 	return req, nil
 }
 
-func (c *Client) do(req *http.Request, v interface{}) (error) {
+func (c *Client) do(req *http.Request, v interface{}) error {
 	res, err := c.http.Do(req)
 	if err != nil {
 		return fmt.Errorf("client.do(): c.http.Do(): %v", err)
@@ -134,7 +136,7 @@ func (c *Client) do(req *http.Request, v interface{}) (error) {
 		}
 		return fmt.Errorf("client.do(): %s", string(resBody))
 	}
-	
+
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return fmt.Errorf("client.do(): ioutil.Readall(): %v", err)
@@ -146,7 +148,7 @@ func (c *Client) do(req *http.Request, v interface{}) (error) {
 			return fmt.Errorf("client.do(): json.Unmarshal(): %v", err)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -184,9 +186,9 @@ func encodeQueryParams(v url.Values) string {
 		keyEscaped := url.QueryEscape(k)
 
 		for _, v := range vs {
-			
+
 			buf.WriteByte('&')
-			
+
 			buf.WriteString(keyEscaped)
 			buf.WriteByte('=')
 			buf.WriteString(url.QueryEscape(v))
