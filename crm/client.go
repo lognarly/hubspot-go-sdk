@@ -87,6 +87,7 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 
 	reqHeaders := make(http.Header)
 	reqHeaders.Set("Content-Type", "application/json")
+	reqHeaders.Set("Authorization", fmt.Sprintf("Bearer %s", c.apiKey))
 	
 	switch method {
 	case "GET", "DELETE":
@@ -158,7 +159,6 @@ func (c *Client) formatUrlWithApiKey(endpoint string) (*url.URL, error) {
 
 	u.Path = path.Join(u.Path, endpoint)
 	q := u.Query()
-	q.Set("hapikey", c.apiKey)
 	u.RawQuery = q.Encode()
 
 	return u, nil
