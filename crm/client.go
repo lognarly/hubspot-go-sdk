@@ -80,9 +80,9 @@ func (c *Client) newHttpRequest(method string, endpoint string, v interface{}) (
 	var err error
 	var body []byte
 	var newBody io.Reader
-	u, err := c.formatUrlWithapiKey(endpoint)
+	u, err := c.formatUrlWithApiKey(endpoint)
 	if err != nil {
-		return nil, fmt.Errorf("client.newHttpRequest(): c.formatUrlWithapiKey(): %v", err)
+		return nil, fmt.Errorf("client.newHttpRequest(): c.formatUrlWithApiKey(): %v", err)
 	}
 
 	reqHeaders := make(http.Header)
@@ -151,10 +151,10 @@ func (c *Client) do(req *http.Request, v interface{}) (error) {
 	return nil
 }
 
-func (c *Client) formatUrlWithapiKey(endpoint string) (*url.URL, error) {
+func (c *Client) formatUrlWithApiKey(endpoint string) (*url.URL, error) {
 	u, err := url.Parse(c.baseURL)
 	if err != nil {
-		return nil, fmt.Errorf("hubspot.Client.formatUrlWithapiKey(): url.Parse(): %v", err)
+		return nil, fmt.Errorf("hubspot.Client.formatUrlWithApiKey(): url.Parse(): %v", err)
 	}
 
 	u.Path = path.Join(u.Path, endpoint)
